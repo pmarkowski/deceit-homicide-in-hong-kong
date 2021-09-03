@@ -1,0 +1,11 @@
+﻿@page
+@model MyApp.Namespace.IndexModel
+@{
+    <h1>Deceit: Homicide in Hong Kong</h1>
+    <p>An online clone of Deception: Murder in Hong Kong.</p>
+    <p>Click below to start a new lobby, or join an existing lobby via its unique link.</p>
+    <form method="POST">
+        <button type="submit">Start a new lobby</button>
+        @Html.AntiForgeryToken()
+    </form>
+}

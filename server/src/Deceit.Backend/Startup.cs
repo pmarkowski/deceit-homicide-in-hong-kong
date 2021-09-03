@@ -18,6 +18,9 @@ namespace Deceit.Backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR();
+            services.AddRazorPages();
+
+            services.AddSingleton<GameLobby>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,11 +35,8 @@ namespace Deceit.Backend
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapHub<GameHub>("/game");
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
             });
         }
     }
