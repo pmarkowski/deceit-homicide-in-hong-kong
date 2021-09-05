@@ -8,11 +8,6 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Deceit.Backend.Hubs
 {
-    public interface IGameHubClient
-    {
-        Task LobbyUpdated(IEnumerable<Player> players);
-    }
-
     class GameHub : Hub<IGameHubClient>
     {
         private readonly LobbyService lobbyService;
@@ -34,7 +29,14 @@ namespace Deceit.Backend.Hubs
             lobby.AddPlayer(new Domain.Players.Player(Context.ConnectionId, name));
             await Groups.AddToGroupAsync(Context.ConnectionId, lobbyId);
 
-            await Clients.Group(lobbyId).LobbyUpdated(lobby.Players);
+            await Clients.Group(lobbyId).LobbyUpdated(lobby);
+        }
+
+        public async Task SetConnectionToForensicScientist()
+        {
+            var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
+            lobby.SetForensicScientistPlayer(Context.ConnectionId);
+            await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
@@ -43,7 +45,7 @@ namespace Deceit.Backend.Hubs
             lobby.RemovePlayer(Context.ConnectionId);
             RemoveLobbyIfEmpty(lobby);
 
-            await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby.Players);
+            await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby);
 
             await base.OnDisconnectedAsync(exception);
         }
