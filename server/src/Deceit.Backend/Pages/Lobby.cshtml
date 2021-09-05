@@ -1,8 +1,8 @@
-﻿@page "/lobby"
-@model MyApp.Namespace.LobbyModel
+﻿@page "/lobby/{lobbyId}"
+@model Deceit.Backend.Pages.LobbyModel
 @{
     <script src="https://www.unpkg.com/%40microsoft/signalr@5.0.9/dist/browser/signalr.min.js"></script>
-    <h1>Yo! I'm a page!</h1>
+    <h1>Welcome to @Model.LobbyId</h1>
     <div>
         <label>Name: <input id="name" /></label>
     </div>
@@ -12,22 +12,6 @@
     <div id="connected-players">
 
     </div>
-    <script>
-        let connection = new signalR.HubConnectionBuilder().withUrl("/game").build();
-        let nameElement = document.getElementById("name");
-        document.getElementById("connect").addEventListener("click", ev => {
-            document.getElementById("connect").disabled = true;
-            connection.start()
-                .then(() => {
-                    connection.invoke("ConnectPlayer", nameElement.value);
-                });
-        });
-
-        let connectedPlayersElement = document.getElementById("connected-players");
-        connection.on("PlayerConnected", (name) => {
-            let connectedPlayerElement = document.createElement("p");
-            connectedPlayersElement.appendChild(connectedPlayerElement);
-            connectedPlayerElement.textContent = name;
-        });
-    </script>
+    <script>window.lobbyId = "@Model.LobbyId";</script>
+    <script src="/js/lobby.js"></script>
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Deceit.Backend.Domain.Lobbies;
 using Deceit.Backend.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,7 +21,7 @@ namespace Deceit.Backend
             services.AddSignalR();
             services.AddRazorPages();
 
-            services.AddSingleton<GameLobby>();
+            services.AddSingleton<LobbyService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,6 +33,8 @@ namespace Deceit.Backend
             }
 
             app.UseRouting();
+
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
