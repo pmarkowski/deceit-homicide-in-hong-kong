@@ -15,6 +15,12 @@ connection.on("LobbyUpdated", (lobby) => {
     });
 });
 
+let gameStateElement = document.getElementById("game-state");
+connection.on("GameStateUpdated", (gameState) => {
+    gameStateElement.textContent = "";
+    gameStateElement.textContent = JSON.stringify(gameState, null, 2);
+});
+
 let nameElement = document.getElementById("name");
 const forensicScientistButton = document.getElementById("forensic-scientist");
 const startGameButton = document.getElementById("start-game");
@@ -32,3 +38,7 @@ document.getElementById("connect").addEventListener("click", ev => {
 forensicScientistButton.addEventListener("click", () => {
     connection.invoke("SetConnectionToForensicScientist");
 });
+
+startGameButton.addEventListener("click", () => {
+    connection.invoke("StartGameInLobby");
+})

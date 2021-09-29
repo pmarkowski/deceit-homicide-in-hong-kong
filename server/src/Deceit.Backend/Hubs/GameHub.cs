@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Deceit.Backend.Domain.Game;
 using Deceit.Backend.Domain.Lobbies;
 using Deceit.Backend.Domain.Players;
 using Microsoft.AspNetCore.SignalR;
@@ -37,6 +38,26 @@ namespace Deceit.Backend.Hubs
             var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
             lobby.SetForensicScientistPlayer(Context.ConnectionId);
             await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby);
+        }
+
+        public async Task StartGameInLobby()
+        {
+            var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
+            var game = new DeceitGame(lobby);
+
+            // Send message telling clients to connect to Game hub instead?
+            // This is probably what makes the most sense...
+            // Not sure where making the DeceitGame makes the most sense
+            // For now, just worry about setting game state, transmitting it,
+            // and representing it. Refactor later to a separate hub.
+
+            // Each player needs to get a representation of the game that
+            // has all public information and only their private information
+
+            await Task.WhenAll(lobby.Players.Select(player =>
+                Clients.Client(player.ConnectionId)
+                    .GameStateUpdated(
+                        game.GetGameStateForPlayer(player.ConnectionId))));
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
