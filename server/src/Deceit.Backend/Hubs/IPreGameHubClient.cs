@@ -4,7 +4,7 @@ using Deceit.Backend.Domain.Lobbies;
 
 namespace Deceit.Backend.Hubs
 {
-    public interface IGameHubClient
+    public interface IPreGameHubClient
     {
         Task LobbyUpdated(Lobby players);
         Task GameStateUpdated(PlayerGameState playerGameState);

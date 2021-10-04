@@ -39,7 +39,7 @@ namespace Deceit.Backend
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
-                endpoints.MapHub<GameHub>("/game");
+                endpoints.MapHub<PreGameHub>("/pregame");
             });
         }
     }

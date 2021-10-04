@@ -1,4 +1,4 @@
-let connection = new signalR.HubConnectionBuilder().withUrl("/game").build();
+let connection = new signalR.HubConnectionBuilder().withUrl("/pregame").build();
 
 
 let connectedPlayersElement = document.getElementById("connected-players");

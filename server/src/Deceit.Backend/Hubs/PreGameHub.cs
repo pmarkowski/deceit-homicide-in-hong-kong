@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Deceit.Backend.Hubs
 {
-    class GameHub : Hub<IGameHubClient>
+    class PreGameHub : Hub<IPreGameHubClient>
     {
         private readonly LobbyService lobbyService;
 
-        public GameHub(LobbyService lobbyService)
+        public PreGameHub(LobbyService lobbyService)
         {
             this.lobbyService = lobbyService;
         }
