@@ -7,6 +7,6 @@ namespace Deceit.Backend.Hubs
     public interface IPreGameHubClient
     {
         Task LobbyUpdated(Lobby players);
-        Task GameStateUpdated(PlayerGameState playerGameState);
+        Task StartGame(PlayerGameState playerGameState);
     }
 }

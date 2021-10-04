@@ -56,7 +56,7 @@ namespace Deceit.Backend.Hubs
 
             await Task.WhenAll(lobby.Players.Select(player =>
                 Clients.Client(player.ConnectionId)
-                    .GameStateUpdated(
+                    .StartGame(
                         game.GetGameStateForPlayer(player.ConnectionId))));
         }
 

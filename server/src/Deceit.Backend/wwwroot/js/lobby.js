@@ -16,7 +16,7 @@ connection.on("LobbyUpdated", (lobby) => {
 });
 
 let gameStateElement = document.getElementById("game-state");
-connection.on("GameStateUpdated", (gameState) => {
+connection.on("StartGame", (gameState) => {
     gameStateElement.textContent = "";
     gameStateElement.textContent = JSON.stringify(gameState, null, 2);
 });
