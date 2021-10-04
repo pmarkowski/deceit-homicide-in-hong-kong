@@ -29,6 +29,11 @@ namespace Deceit.Backend.Domain.Game
         public DeceitGame(Lobby lobby)
         {
             this.lobby = lobby;
+            if (lobby.ForensicScientistId is null)
+            {
+                throw new ArgumentNullException($"{nameof(lobby.ForensicScientistId)} was expected.");
+            }
+
             forensicScientist = new ForensicScientist(lobby.ForensicScientistId);
             var roleCards = new InvestigatorRoleCardsDeck(lobby.Players.Count() - 1);
             investigators = lobby.Players
