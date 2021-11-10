@@ -2,7 +2,7 @@ namespace Deceit.Backend.Domain.Lobbies;
 
 public class LobbyService
 {
-    Dictionary<string, Lobby> lobbies = new();
+    readonly Dictionary<string, Lobby> lobbies = new();
 
     public Lobby? FindLobby(string lobbyId)
     {

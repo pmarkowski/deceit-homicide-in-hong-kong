@@ -14,18 +14,14 @@ public class DeceitGame
     private readonly SceneCardsDeck sceneCardsDeck = new();
     private readonly EvidenceCardsDeck evidenceCardsDeck = new();
     private readonly MeansOfMurderCardsDeck meansOfMurderCardsDeck = new();
-    // Might make sense to have a base Lobby with
-    // a PregameLobby and GameLobby implementation?
-    private Lobby lobby;
 
-    private ForensicScientist forensicScientist;
-    private IEnumerable<Investigator> investigators;
+    private readonly ForensicScientist forensicScientist;
+    private readonly IEnumerable<Investigator> investigators;
 
-    private List<SceneCard> sceneCards = new();
+    private readonly List<SceneCard> sceneCards = new();
 
     public DeceitGame(Lobby lobby)
     {
-        this.lobby = lobby;
         if (lobby.ForensicScientistId is null)
         {
             throw new ArgumentNullException($"{nameof(lobby.ForensicScientistId)} was expected.");
