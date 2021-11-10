@@ -1,10 +1,8 @@
-using System.Collections.Generic;
+namespace Deceit.Backend.Domain.Game.SceneCards;
 
-namespace Deceit.Backend.Domain.Game.SceneCards
+class CauseOfDeathSceneCard : SceneCard
 {
-    class CauseOfDeathSceneCard : SceneCard
-    {
-        public CauseOfDeathSceneCard() : base("Cause of Death", new List<string>
+    public CauseOfDeathSceneCard() : base("Cause of Death", new List<string>
         {
             "Suffocation",
             "Severe Injury",
@@ -13,7 +11,6 @@ namespace Deceit.Backend.Domain.Game.SceneCards
             "Poisoning",
             "Accident"
         })
-        {
-        }
+    {
     }
 }

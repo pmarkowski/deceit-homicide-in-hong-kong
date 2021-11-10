@@ -1,10 +1,8 @@
-using System.Collections.Generic;
+namespace Deceit.Backend.Domain.Game.Evidence;
 
-namespace Deceit.Backend.Domain.Game.Evidence
+public class MeansOfMurderCardsDeck : Deck<string>
 {
-    public class MeansOfMurderCardsDeck : Deck<string>
-    {
-        public MeansOfMurderCardsDeck() : base(new List<string>
+    public MeansOfMurderCardsDeck() : base(new List<string>
         {
             "Alcohol",
             "Amoeba",
@@ -97,7 +95,6 @@ namespace Deceit.Backend.Domain.Game.Evidence
             "Work",
             "Wrench",
         })
-        {
-        }
+    {
     }
 }

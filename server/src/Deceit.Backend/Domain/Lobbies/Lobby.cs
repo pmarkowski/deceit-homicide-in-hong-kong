@@ -1,45 +1,43 @@
-using System;
-using System.Collections.Generic;
 using Deceit.Backend.Domain.Players;
 
-namespace Deceit.Backend.Domain.Lobbies
+namespace Deceit.Backend.Domain.Lobbies;
+
+public class Lobby
 {
-    public class Lobby
+    public string LobbyId { get; }
+
+    readonly List<Player> players;
+    public string? ForensicScientistId { get; private set; }
+
+    public IEnumerable<Player> Players => players;
+
+    public Lobby(string lobbyId)
     {
-        public string LobbyId { get; }
-        List<Player> players;
-        public string? ForensicScientistId { get; private set; }
+        LobbyId = lobbyId;
+        players = new();
+    }
 
-        public IEnumerable<Player> Players => players;
+    public void AddPlayer(Player player)
+    {
+        players.Add(player);
+        SetForensicScientistForFirstPlayer(player);
+    }
 
-        public Lobby(string lobbyId)
+    private void SetForensicScientistForFirstPlayer(Player player)
+    {
+        if (players.Count == 1)
         {
-            LobbyId = lobbyId;
-            players = new();
+            this.ForensicScientistId = player.ConnectionId;
         }
+    }
 
-        public void AddPlayer(Player player)
-        {
-            players.Add(player);
-            SetForensicScientistForFirstPlayer(player);
-        }
+    public void SetForensicScientistPlayer(string connectionId)
+    {
+        this.ForensicScientistId = connectionId;
+    }
 
-        private void SetForensicScientistForFirstPlayer(Player player)
-        {
-            if (players.Count == 1)
-            {
-                this.ForensicScientistId = player.ConnectionId;
-            }
-        }
-
-        public void SetForensicScientistPlayer(string connectionId)
-        {
-            this.ForensicScientistId = connectionId;
-        }
-
-        internal void RemovePlayer(string connectionId)
-        {
-            players.RemoveAt(players.FindIndex(player => player.ConnectionId == connectionId));
-        }
+    internal void RemovePlayer(string connectionId)
+    {
+        players.RemoveAt(players.FindIndex(player => player.ConnectionId == connectionId));
     }
 }

@@ -1,14 +1,13 @@
-namespace Deceit.Backend.Domain.Players
-{
-    public class Player
-    {
-        public string ConnectionId { get; }
-        public string Name { get; }
+namespace Deceit.Backend.Domain.Players;
 
-        public Player(string connectionId, string name)
-        {
-            Name = name;
-            ConnectionId = connectionId;
-        }
+public class Player
+{
+    public string ConnectionId { get; }
+    public string Name { get; }
+
+    public Player(string connectionId, string name)
+    {
+        Name = name;
+        ConnectionId = connectionId;
     }
 }

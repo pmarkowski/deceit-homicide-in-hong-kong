@@ -1,34 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Deceit.Backend.Domain.Lobbies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Deceit.Backend.Pages
+namespace Deceit.Backend.Pages;
+
+public class LobbyModel : PageModel
 {
-    public class LobbyModel : PageModel
+    private readonly LobbyService lobbyService;
+
+    [FromRoute]
+    public string LobbyId { get; init; }
+
+    public LobbyModel(LobbyService lobbyService)
     {
-        private readonly LobbyService lobbyService;
+        this.lobbyService = lobbyService;
+        LobbyId = String.Empty;
+    }
 
-        [FromRoute]
-        public string LobbyId { get; init; }
-
-        public LobbyModel(LobbyService lobbyService)
+    public ActionResult OnGet()
+    {
+        var lobby = lobbyService.FindLobby(LobbyId);
+        if (lobby is null)
         {
-            this.lobbyService = lobbyService;
-            LobbyId = String.Empty;
+            return NotFound();
         }
-
-        public ActionResult OnGet()
-        {
-            var lobby = lobbyService.FindLobby(LobbyId);
-            if (lobby is null)
-            {
-                return NotFound();
-            }
-            return Page();
-        }
+        return Page();
     }
 }

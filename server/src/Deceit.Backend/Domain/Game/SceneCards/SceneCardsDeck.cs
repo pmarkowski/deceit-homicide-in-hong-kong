@@ -1,12 +1,10 @@
-using System.Collections.Generic;
+namespace Deceit.Backend.Domain.Game.SceneCards;
 
-namespace Deceit.Backend.Domain.Game.SceneCards
+class SceneCardsDeck : Deck<SceneCard>
 {
-    class SceneCardsDeck : Deck<SceneCard>
-    {
-        public SceneCardsDeck() : base(
-            new List<SceneCard>()
-            {
+    public SceneCardsDeck() : base(
+        new List<SceneCard>()
+        {
                 new SceneCard(
                     "Motive of Crime",
                     new List<string>()
@@ -238,9 +236,8 @@ namespace Deceit.Backend.Domain.Game.SceneCards
                         "Scream",
                         "Nothing",
                     }),
-            })
-        {
-        }
+        })
+    {
     }
 }
 
