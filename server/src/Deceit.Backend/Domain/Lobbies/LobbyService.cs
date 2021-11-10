@@ -1,36 +1,31 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+namespace Deceit.Backend.Domain.Lobbies;
 
-namespace Deceit.Backend.Domain.Lobbies
+public class LobbyService
 {
-    public class LobbyService
+    Dictionary<string, Lobby> lobbies = new();
+
+    public Lobby? FindLobby(string lobbyId)
     {
-        Dictionary<string, Lobby> lobbies = new();
+        return lobbies.ContainsKey(lobbyId) ?
+            lobbies[lobbyId] :
+            null;
+    }
 
-        public Lobby? FindLobby(string lobbyId)
-        {
-            return lobbies.ContainsKey(lobbyId) ?
-                lobbies[lobbyId] :
-                null;
-        }
+    public void AddLobby(Lobby lobby)
+    {
+        lobbies[lobby.LobbyId] = lobby;
+    }
 
-        public void AddLobby(Lobby lobby)
-        {
-            lobbies[lobby.LobbyId] = lobby;
-        }
+    public Lobby GetLobbyWithPlayer(string connectionId)
+    {
+        return lobbies
+            .First(keyValuePair => keyValuePair.Value.Players
+                .Any(player => player.ConnectionId == connectionId))
+            .Value;
+    }
 
-        public Lobby GetLobbyWithPlayer(string connectionId)
-        {
-            return lobbies
-                .First(keyValuePair => keyValuePair.Value.Players
-                    .Any(player => player.ConnectionId == connectionId))
-                .Value;
-        }
-
-        internal void RemoveLobby(Lobby lobby)
-        {
-            lobbies.Remove(lobby.LobbyId);
-        }
+    internal void RemoveLobby(Lobby lobby)
+    {
+        lobbies.Remove(lobby.LobbyId);
     }
 }

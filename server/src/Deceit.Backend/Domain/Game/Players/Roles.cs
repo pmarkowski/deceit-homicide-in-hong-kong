@@ -1,9 +1,8 @@
-namespace Deceit.Backend.Domain.Game.Players
+namespace Deceit.Backend.Domain.Game.Players;
+
+class Roles
 {
-    class Roles
-    {
-        public static string ForensicScientist => "Forensic Scientist";
-        public static string Murderer => "Murderer";
-        public static string Investigator => "Investigator";
-    }
+    public static string ForensicScientist => "Forensic Scientist";
+    public static string Murderer => "Murderer";
+    public static string Investigator => "Investigator";
 }

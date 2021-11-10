@@ -1,12 +1,10 @@
-using System.Collections.Generic;
+namespace Deceit.Backend.Domain.Game.SceneCards;
 
-namespace Deceit.Backend.Domain.Game.SceneCards
+class LocationOfCrimeSceneCards
 {
-    class LocationOfCrimeSceneCards
-    {
-        public static IEnumerable<SceneCard> Cards =>
-            new List<SceneCard>()
-            {
+    public static IEnumerable<SceneCard> Cards =>
+        new List<SceneCard>()
+        {
                 new SceneCard(
                     "Location of Crime",
                     new List<string>()
@@ -55,6 +53,5 @@ namespace Deceit.Backend.Domain.Game.SceneCards
                         "Toilet"
                     }
                 )
-            };
-    }
+        };
 }

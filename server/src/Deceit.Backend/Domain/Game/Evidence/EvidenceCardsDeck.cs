@@ -1,10 +1,8 @@
-using System.Collections.Generic;
+namespace Deceit.Backend.Domain.Game.Evidence;
 
-namespace Deceit.Backend.Domain.Game.Evidence
+public class EvidenceCardsDeck : Deck<string>
 {
-    public class EvidenceCardsDeck : Deck<string>
-    {
-        public EvidenceCardsDeck() : base(new List<string>
+    public EvidenceCardsDeck() : base(new List<string>
         {
             "Air Conditioning",
             "Ants",
@@ -207,6 +205,5 @@ namespace Deceit.Backend.Domain.Game.Evidence
             "Watch",
             "Wig"
         })
-        { }
-    }
+    { }
 }
