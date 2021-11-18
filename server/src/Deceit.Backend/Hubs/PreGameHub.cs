@@ -13,6 +13,16 @@ class PreGameHub : Hub<IPreGameHubClient>
         this.lobbyService = lobbyService;
     }
 
+    // Can kind of simplify down to a really straightforward hub with nearly one method now.
+    public async Task HandleAction(string actionName, object actionData)
+    {
+        // Get context for connection
+        // create Action object
+        // Dispatch action to context
+        // persist new state
+        // distribute state
+    }
+
     public async Task ConnectPlayer(string lobbyId, string name)
     {
         // Feel like players should have some client side generated ID persisted
@@ -22,6 +32,19 @@ class PreGameHub : Hub<IPreGameHubClient>
         {
             throw new HubException("Lobby not found");
         }
+        var playerConnectedAction = new Domain.Game.States.Actions.ConnectedAction()
+        {
+            PlayerId = Context.ConnectionId,
+            Data = new(Context.ConnectionId, name)
+        };
+        // Retrieve DeceitContext based on Lobby/Player ID
+        Domain.Game.States.DeceitContext deceitContext = new();
+        deceitContext.Handle(playerConnectedAction);
+
+        // Persist DeceitContext data
+
+        // Return new state?
+
         lobby.AddPlayer(new Domain.Players.Player(Context.ConnectionId, name));
         await Groups.AddToGroupAsync(Context.ConnectionId, lobbyId);
 

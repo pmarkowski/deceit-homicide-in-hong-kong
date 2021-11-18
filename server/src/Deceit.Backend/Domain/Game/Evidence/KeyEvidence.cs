@@ -3,7 +3,7 @@ namespace Deceit.Backend.Domain.Game.Evidence;
 /// <summary>
 /// Key Evidence selected by the Murderer
 /// </summary>
-class KeyEvidence
+public class KeyEvidence
 {
     public string Evidence { get; }
     public string MeansOfMurder { get; }
