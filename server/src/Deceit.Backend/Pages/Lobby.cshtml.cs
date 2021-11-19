@@ -1,4 +1,4 @@
-using Deceit.Backend.Domain.Lobbies;
+using Deceit.Domain.Lobbies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

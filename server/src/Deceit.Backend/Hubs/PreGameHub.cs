@@ -1,6 +1,6 @@
-using Deceit.Backend.Domain.Game;
-using Deceit.Backend.Domain.Lobbies;
+using Deceit.Domain.Lobbies;
 using Microsoft.AspNetCore.SignalR;
+using System.Text.Json;
 
 namespace Deceit.Backend.Hubs;
 
@@ -13,6 +13,33 @@ class PreGameHub : Hub<IPreGameHubClient>
         this.lobbyService = lobbyService;
     }
 
+    // Can kind of simplify down to a really straightforward hub with nearly one method now.
+    public async Task SubmitAction(string actionType, JsonDocument action)
+    {
+
+        // Get context for connection
+        // create Action object
+        // Dispatch action to context
+        // persist new state
+        // distribute state
+        var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
+        try
+        {
+            var deserializedAction = ActionFactory.CreateAction(actionType, action);
+
+            lobby.DeceitContext.Handle(deserializedAction);
+        }
+        catch (Exception ex)
+        {
+            throw new HubException("An Error Ocurred", ex);
+        }
+
+        await Task.WhenAll(lobby.Players.Select(player =>
+            Clients.Client(player.ConnectionId)
+                .GameUpdated(
+                    lobby.DeceitContext.Game.GetGameInformationForPlayer(player.ConnectionId))));
+    }
+
     public async Task ConnectPlayer(string lobbyId, string name)
     {
         // Feel like players should have some client side generated ID persisted
@@ -22,7 +49,7 @@ class PreGameHub : Hub<IPreGameHubClient>
         {
             throw new HubException("Lobby not found");
         }
-        lobby.AddPlayer(new Domain.Players.Player(Context.ConnectionId, name));
+        lobby.AddPlayer(new Domain.Players.Player(Context.ConnectionId, name, true));
         await Groups.AddToGroupAsync(Context.ConnectionId, lobbyId);
 
         await Clients.Group(lobbyId).LobbyUpdated(lobby);
@@ -38,7 +65,7 @@ class PreGameHub : Hub<IPreGameHubClient>
     public async Task StartGameInLobby()
     {
         var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
-        var game = new DeceitGame(lobby);
+        lobby.StartGame();
 
         // Send message telling clients to connect to Game hub instead?
         // This is probably what makes the most sense...
@@ -52,13 +79,13 @@ class PreGameHub : Hub<IPreGameHubClient>
         await Task.WhenAll(lobby.Players.Select(player =>
             Clients.Client(player.ConnectionId)
                 .StartGame(
-                    game.GetGameStateForPlayer(player.ConnectionId))));
+                    lobby.DeceitContext.Game.GetGameInformationForPlayer(player.ConnectionId))));
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
-        lobby.RemovePlayer(Context.ConnectionId);
+        lobby.DisconnectPlayer(Context.ConnectionId);
         RemoveLobbyIfEmpty(lobby);
 
         await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby);

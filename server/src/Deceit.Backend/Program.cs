@@ -1,5 +1,5 @@
-using Deceit.Backend.Domain.Lobbies;
 using Deceit.Backend.Hubs;
+using Deceit.Domain.Lobbies;
 
 var builder = WebApplication.CreateBuilder(args);
 
