@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deceit.Backend", "src\Decei
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C69725D9-4F1F-4912-8559-07C549B4038F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deceit.Domain.Tests", "tests\Deceit.Backend.Tests\Deceit.Domain.Tests.csproj", "{0F1B007C-FFAA-48DC-AC9A-C70FC888BC5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deceit.Domain.Tests", "tests\Deceit.Domain.Tests\Deceit.Domain.Tests.csproj", "{0F1B007C-FFAA-48DC-AC9A-C70FC888BC5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deceit.Domain", "Deceit.Domain\Deceit.Domain.csproj", "{39D72C30-462E-4246-B6C8-D33F3439E4EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deceit.Domain", "src\Deceit.Domain\Deceit.Domain.csproj", "{39D72C30-462E-4246-B6C8-D33F3439E4EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deceit.Backend.Tests", "Deceit.Backend.Tests\Deceit.Backend.Tests.csproj", "{BB5DF041-98D4-44E7-922F-7C713042DEFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deceit.Backend.Tests", "tests\Deceit.Backend.Tests\Deceit.Backend.Tests.csproj", "{BB5DF041-98D4-44E7-922F-7C713042DEFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
