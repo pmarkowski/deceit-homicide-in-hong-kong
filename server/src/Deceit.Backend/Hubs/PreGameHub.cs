@@ -1,5 +1,6 @@
 using Deceit.Domain.Lobbies;
 using Microsoft.AspNetCore.SignalR;
+using System.Text.Json;
 
 namespace Deceit.Backend.Hubs;
 
@@ -13,13 +14,30 @@ class PreGameHub : Hub<IPreGameHubClient>
     }
 
     // Can kind of simplify down to a really straightforward hub with nearly one method now.
-    public async Task SubmitAction(object actionData)
+    public async Task SubmitAction(string actionType, JsonDocument action)
     {
+
         // Get context for connection
         // create Action object
         // Dispatch action to context
         // persist new state
         // distribute state
+        var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
+        try
+        {
+            var deserializedAction = ActionFactory.CreateAction(actionType, action);
+
+            lobby.DeceitContext.Handle(deserializedAction);
+        }
+        catch (Exception ex)
+        {
+            throw new HubException("An Error Ocurred", ex);
+        }
+
+        await Task.WhenAll(lobby.Players.Select(player =>
+            Clients.Client(player.ConnectionId)
+                .GameUpdated(
+                    lobby.DeceitContext.Game.GetGameInformationForPlayer(player.ConnectionId))));
     }
 
     public async Task ConnectPlayer(string lobbyId, string name)
