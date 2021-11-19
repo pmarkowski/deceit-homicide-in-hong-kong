@@ -1,6 +1,6 @@
 namespace Deceit.Domain.Game.Players;
 
-class Roles
+public class Roles
 {
     public static string ForensicScientist => "Forensic Scientist";
     public static string Murderer => "Murderer";

@@ -7,7 +7,7 @@ namespace Deceit.Domain.Game;
 /// The representation of the game state that is
 /// accessible to Investigators
 /// </summary>
-class InvestigatorGameInformation : PlayerGameInformation
+public class InvestigatorGameInformation : PlayerGameInformation
 {
     public string PlayerRole { get; }
 

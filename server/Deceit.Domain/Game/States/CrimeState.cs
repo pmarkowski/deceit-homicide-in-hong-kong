@@ -16,11 +16,17 @@ public class CrimeState : State
             _ => throw UnsupportedActionException()
         };
 
-    private State HandleAction(SelectMeansOfMurderAction meansOfMurderAction)
+    private State HandleAction(SelectMeansOfMurderAction selectMeansOfMurderAction)
     {
-        // Need to make sure that action is submitted by the Murderer
-        // Make sure the evidence is in front of the Murderer
-        // Set the KeyEvidence on the context and transition to next state
+        // TODO: Need to make sure that action is submitted by the Murderer at some point
+        var murderer = context.Game.Investigators!.First(investigator => investigator.Role == Players.Roles.Murderer);
+        bool murdererHasSelectedEvidenceCard = murderer.EvidenceCards.Any(evidenceCard => evidenceCard == selectMeansOfMurderAction.Data.Evidence);
+        bool murdererHasSelectedMeansOfMurderCard = murderer.MeansOfMurderCards.Any(meansOfMurderCard => meansOfMurderCard == selectMeansOfMurderAction.Data.MeansOfMurder);
+        if (!murdererHasSelectedEvidenceCard || !murdererHasSelectedMeansOfMurderCard)
+        {
+            throw new Exception("Cannot select Key Evidence that does not belong to Murderer");
+        }
+        context.Game.KeyEvidence = selectMeansOfMurderAction.Data;
         return new LocationOfCrimeSceneCardSelectionState(context);
     }
 }
