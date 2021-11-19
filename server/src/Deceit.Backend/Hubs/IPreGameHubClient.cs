@@ -1,10 +1,10 @@
-using Deceit.Backend.Domain.Game;
-using Deceit.Backend.Domain.Lobbies;
+using Deceit.Domain.Game;
+using Deceit.Domain.Lobbies;
 
 namespace Deceit.Backend.Hubs;
 
 public interface IPreGameHubClient
 {
     Task LobbyUpdated(Lobby players);
-    Task StartGame(PlayerGameState playerGameState);
+    Task StartGame(PlayerGameInformation playerGameInformation);
 }

@@ -1,5 +1,4 @@
-using Deceit.Backend.Domain.Game;
-using Deceit.Backend.Domain.Lobbies;
+using Deceit.Domain.Lobbies;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Deceit.Backend.Hubs;
@@ -32,20 +31,7 @@ class PreGameHub : Hub<IPreGameHubClient>
         {
             throw new HubException("Lobby not found");
         }
-        var playerConnectedAction = new Domain.Game.States.Actions.ConnectedAction()
-        {
-            PlayerId = Context.ConnectionId,
-            Data = new(Context.ConnectionId, name)
-        };
-        // Retrieve DeceitContext based on Lobby/Player ID
-        Domain.Game.States.DeceitContext deceitContext = new();
-        deceitContext.Handle(playerConnectedAction);
-
-        // Persist DeceitContext data
-
-        // Return new state?
-
-        lobby.AddPlayer(new Domain.Players.Player(Context.ConnectionId, name));
+        lobby.AddPlayer(new Domain.Players.Player(Context.ConnectionId, name, true));
         await Groups.AddToGroupAsync(Context.ConnectionId, lobbyId);
 
         await Clients.Group(lobbyId).LobbyUpdated(lobby);
@@ -61,7 +47,7 @@ class PreGameHub : Hub<IPreGameHubClient>
     public async Task StartGameInLobby()
     {
         var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
-        var game = new DeceitGame(lobby);
+        lobby.StartGame();
 
         // Send message telling clients to connect to Game hub instead?
         // This is probably what makes the most sense...
@@ -75,13 +61,13 @@ class PreGameHub : Hub<IPreGameHubClient>
         await Task.WhenAll(lobby.Players.Select(player =>
             Clients.Client(player.ConnectionId)
                 .StartGame(
-                    game.GetGameStateForPlayer(player.ConnectionId))));
+                    lobby.DeceitContext.Game.GetGameInformationForPlayer(player.ConnectionId))));
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
-        lobby.RemovePlayer(Context.ConnectionId);
+        lobby.DisconnectPlayer(Context.ConnectionId);
         RemoveLobbyIfEmpty(lobby);
 
         await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby);
