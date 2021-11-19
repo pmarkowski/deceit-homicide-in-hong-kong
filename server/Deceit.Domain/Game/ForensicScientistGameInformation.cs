@@ -10,16 +10,13 @@ namespace Deceit.Domain.Game;
 class ForensicScientistGameInformation : PlayerGameInformation
 {
     public string Role { get; }
-    public List<SceneCard> SceneCards { get; }
     public IEnumerable<Investigator> Investigators { get; }
 
     public ForensicScientistGameInformation(
         string role,
-        List<SceneCard> sceneCards,
         IEnumerable<Investigator> investigators)
     {
         Role = role;
-        SceneCards = sceneCards;
         Investigators = investigators;
     }
 }

@@ -12,18 +12,15 @@ public class DeceitGame
 
     public PlayerGameInformation GetGameInformationForPlayer(string playerId)
     {
-        throw new NotImplementedException();
-        //if (forensicScientist.PlayerId == playerId)
-        //{
-        //    return new ForensicScientistGameInformation(
-        //        Roles.ForensicScientist,
-        //        sceneCards,
-        //        investigators
-        //    );
-        //}
-        //return new InvestigatorGameInformation(
-        //    investigators.Single(player => player.PlayerId == playerId).Role,
-        //    sceneCards,
-        //    investigators);
+        if (ForensicScientist.PlayerId == playerId)
+        {
+            return new ForensicScientistGameInformation(
+                Roles.ForensicScientist,
+                Investigators
+            );
+        }
+        return new InvestigatorGameInformation(
+            Investigators.Single(player => player.PlayerId == playerId).Role,
+            Investigators);
     }
 }
