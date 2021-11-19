@@ -9,17 +9,29 @@ send events between the client and server to track game interactions.
 LOBBY - Game has not yet started, players are joining/leaving the room, possibly selecting the Forensic Scientist roles
 
 CRIME - First part of game, Murderer identifies "Means of Murder" and "Key Evidence"
+
 FIRST_EVIDENCE_COLLECTION_LOCATION_OF_CRIME_SELECTION - Cause of Death is placed, Location of Crime is selected, and 4 Scene Tiles drawn (This feels like it might be 3 "sub" states)
+
 FIRST_EVIDENCE_COLLECTION_SELECTION - Forensic Scientists places all 6 bullets on each card, in any order, and is unable to modify them afterward
+
 FIRST_PRESENTATION - Some time is spent where the investigators can deliberate amongst each other, then each investigator has 30 seconds to make a case
+
 SECOND_EVIDENCE_COLLECTION - A new Scene tile is drawn, and the Forensic Scientist replaces one of the four scene tiles
+
 SECOND_EVIDENCE_COLLECTION_SELECTION - Forensic Scientist places a bullet on the new scene card
+
 SECOND_PRESENTATION - Same as before
+
 THIRD_EVIDENCE_COLLECTION - Same as before
+
 THID_EVIDENCE_COLLECTION_SELECTION - same as before
+
 THIRD_PRESENTATION - Same as before
+
 SOLVING_THE_CRIME - Once per game, each investigator can hand in their badge and try to Solve the Crime. A "Means of Murder" and "Key Evidence" is selected by the investigator
+
 INVESTIGATORS_WIN - The crime has been solved by correctly guessing the means of murder and key evidence
+
 MURDERER_WINS - The crime has not been solved by the end of the THIRD_PRESENTATION
 
 ## Actions
