@@ -46,8 +46,9 @@ startGameButton.addEventListener("click", () => {
 });
 
 document.getElementById("submit-game-action").addEventListener("click", () => {
-    const gameActionText = document.getElementById("game-action").innerText;
-    connection.invoke("SubmitAction", JSON.parse(gameActionText));
+    const gameActionText = document.getElementById("game-action-type").value;
+    const gameActionData = document.getElementById("game-action-data").value;
+    connection.invoke("SubmitAction", gameActionText, JSON.parse(gameActionData));
 });
 
 connection.on("GameUpdated", (gameState) => {
