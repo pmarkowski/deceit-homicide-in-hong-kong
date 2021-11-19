@@ -7,4 +7,5 @@ public interface IPreGameHubClient
 {
     Task LobbyUpdated(Lobby players);
     Task StartGame(PlayerGameInformation playerGameInformation);
+    Task GameUpdated(PlayerGameInformation playerGameInformation);
 }

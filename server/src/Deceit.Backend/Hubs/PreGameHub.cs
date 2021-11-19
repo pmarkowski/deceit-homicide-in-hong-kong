@@ -13,7 +13,7 @@ class PreGameHub : Hub<IPreGameHubClient>
     }
 
     // Can kind of simplify down to a really straightforward hub with nearly one method now.
-    public async Task HandleAction(string actionName, object actionData)
+    public async Task SubmitAction(object actionData)
     {
         // Get context for connection
         // create Action object

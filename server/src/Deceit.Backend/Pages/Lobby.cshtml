@@ -21,8 +21,14 @@
     <div>
         <button id="start-game" disabled>Start Game</button>
     </div>
-    <pre id="game-state">
-    </pre>
+    <div id="game-details" hidden>
+        <textarea id="game-action" style="font-family:Courier New, Courier, monospace"></textarea>
+        <div>
+            <button id="submit-game-action" type="button">Submit Action</button>
+        </div>
+        <pre id="game-state">
+        </pre>
+    </div>
     <script>window.lobbyId = "@Model.LobbyId";</script>
     <script src="/js/lobby.js"></script>
 }
