@@ -5,11 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (web)",
+            "name": "Launch Server",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/server/src/Deceit.Backend/bin/Debug/net5.0/Deceit.Backend.dll",
+            "program": "${workspaceFolder}/server/src/Deceit.Backend/bin/Debug/net6.0/Deceit.Backend.dll",
             "args": [],
             "cwd": "${workspaceFolder}/server/src/Deceit.Backend",
             "stopAtEntry": false,
@@ -28,6 +28,22 @@
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach"
+        },
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Debug Client",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug Client and Server",
+            "configurations": [
+                "Launch Server",
+                "Debug Client"
+            ]
         }
     ]
 }
