@@ -13,6 +13,10 @@ public class LobbyService
 
     public void AddLobby(Lobby lobby)
     {
+        if (lobbies.ContainsKey(lobby.LobbyId))
+        {
+            throw new ArgumentException("Lobby with ID already exists.");
+        }
         lobbies[lobby.LobbyId] = lobby;
     }
 
