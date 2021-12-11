@@ -8,6 +8,8 @@ builder.Services.AddSignalR();
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<LobbyService>();
 
+builder.Services.AddCors();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,6 +24,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors(builder =>
+    builder.WithOrigins("http://localhost:3000")
+);
+
 app.MapHub<PreGameHub>("/pregame");
 app.MapRazorPages();
 
