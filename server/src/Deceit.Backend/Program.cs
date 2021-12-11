@@ -26,7 +26,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseCors(builder =>
-    builder.WithOrigins("http://localhost:3000")
+    builder
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()
+        .WithOrigins("http://localhost:3000")
 );
 
 app.MapHub<PreGameHub>("/pregame");
