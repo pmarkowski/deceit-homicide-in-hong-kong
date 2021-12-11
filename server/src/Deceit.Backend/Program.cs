@@ -25,4 +25,11 @@ app.UseRouting();
 app.MapHub<PreGameHub>("/pregame");
 app.MapRazorPages();
 
+app.MapPost("/lobby", (LobbyService lobbyService) =>
+{
+    Lobby lobby = new(Guid.NewGuid().ToString());
+    lobbyService.AddLobby(lobby);
+    return lobby;
+});
+
 app.Run();
