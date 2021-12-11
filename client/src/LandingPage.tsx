@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 export const LandingPage = () => {
 
     const [isCreatingLobby, setIsCreatingLobby] = useState(false)
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (isCreatingLobby) {
@@ -11,9 +14,10 @@ export const LandingPage = () => {
                 .then(response => {
                     console.log(response.data);
                     setIsCreatingLobby(false);
+                    navigate(`/lobby/${response.data.lobbyId}`);
                 });
         }
-    }, [isCreatingLobby]);
+    }, [isCreatingLobby, navigate]);
 
     const clickCreateLobby = () => {
         setIsCreatingLobby(true);
