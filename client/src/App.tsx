@@ -1,6 +1,6 @@
 function App() {
 
-  const clickJoinLobby = () => { };
+  const clickCreateLobby = () => { };
 
   return (
     <div className="min-h-screen text-center bg-trueGray-900">
@@ -11,13 +11,9 @@ function App() {
           An online implementation of <a href="https://greyfoxgames.com/deception-murder-in-hong-kong/" target="_blank" rel="noreferrer">Deception: Murder in Hong Kong</a>.
         </p>
       </div>
-      <div className="py-16 space-y-8">
+      <div className="py-16 space-y-8 w-1/6 mx-auto">
         <div>
-          <a className="btn bg-lightBlue-500 text-black hover:bg-lightBlue-400" href="/lobby">Create Lobby</a>
-        </div>
-        <div>
-          <input className="block bg-lightBlue-100 text-black font-semibold rounded-md p-2 mx-auto text-center placeholder-trueGray-600" placeholder="Lobby Code" />
-          <button className="btn bg-lightBlue-500 text-black hover:bg-lightBlue-400" onClick={clickJoinLobby}>Join Lobby</button>
+          <button className="btn bg-lightBlue-300 text-trueGray-800 hover:bg-lightBlue-400 w-full" onClick={clickCreateLobby}>Create Lobby</button>
         </div>
       </div>
     </div >
