@@ -1,6 +1,23 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 export const LandingPage = () => {
 
-    const clickCreateLobby = () => { };
+    const [isCreatingLobby, setIsCreatingLobby] = useState(false)
+
+    useEffect(() => {
+        if (isCreatingLobby) {
+            axios.post(`${process.env.REACT_APP_SERVER_BASE_URL}/lobby`)
+                .then(response => {
+                    console.log(response.data);
+                    setIsCreatingLobby(false);
+                });
+        }
+    }, [isCreatingLobby]);
+
+    const clickCreateLobby = () => {
+        setIsCreatingLobby(true);
+    };
 
     return (
         <div className="min-h-screen text-center bg-trueGray-900">
