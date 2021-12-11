@@ -12,9 +12,13 @@ export const LandingPage = () => {
         if (isCreatingLobby) {
             axios.post(`${process.env.REACT_APP_SERVER_BASE_URL}/lobby`)
                 .then(response => {
-                    console.log(response.data);
                     setIsCreatingLobby(false);
                     navigate(`/lobby/${response.data.lobbyId}`);
+                })
+                .catch(error => {
+                    console.log(error);
+                    alert(error);
+                    setIsCreatingLobby(false);
                 });
         }
     }, [isCreatingLobby, navigate]);
