@@ -13,7 +13,7 @@ public class CrimeState : State
         action switch
         {
             SelectMeansOfMurderAction meansOfMurderAction => HandleAction(meansOfMurderAction),
-            _ => throw UnsupportedActionException()
+            _ => throw UnsupportedActionException(nameof(CrimeState), action.GetType().Name)
         };
 
     private State HandleAction(SelectMeansOfMurderAction selectMeansOfMurderAction)
