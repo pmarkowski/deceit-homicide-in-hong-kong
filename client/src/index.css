@@ -6,10 +6,18 @@
   a {
     @apply underline
   }
+
+  .text-light {
+    @apply text-lightBlue-200
+  }
 }
 
 @layer components {
   .btn {
     @apply inline-block rounded-lg p-4 font-semibold no-underline
+  }
+
+  .btn-blue {
+    @apply bg-lightBlue-300 hover:bg-lightBlue-400 text-trueGray-800
   }
 }
