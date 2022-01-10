@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import * as signalR from "@microsoft/signalr";
 import { TitleLayout } from "./TitleLayout";
@@ -8,36 +8,36 @@ const connection = new signalR.HubConnectionBuilder()
     .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/pregame`)
     .build();
 
-const connectionIsConnectingOrConnected = () =>
-    (connection.state === signalR.HubConnectionState.Connecting) ||
-    (connection.state === signalR.HubConnectionState.Connected);
+const connectionIsConnected = () =>
+    (connection?.state === signalR.HubConnectionState.Connected);
 
 export const Lobby = () => {
     const params = useParams();
 
     const [username, setUsername] = useState("");
-    const [lobbyData, setLobbyData] = useState<any>({});
+    const [lobbyData, setLobbyData] = useState<any>(null);
 
-    // This gets invoked a lot. I suspect multiple subscribers are created for this.
-    // How connection is handled. Connecting will need to move to a hook.
-    // This can also be observed by strange behaviour with the hub, multiple connections
-    // are persisted even though this component has been removed.
-    connection.on("LobbyUpdated", (lobby) => {
-        console.log(lobby);
-        setLobbyData(lobby);
-    });
+    useEffect(() => {
+        connection.on("LobbyUpdated", (lobby) => {
+            setLobbyData(lobby);
+        });
 
-    connection.on("StartGame", (gameState) => {
-        console.log(gameState);
-    });
+        connection.on("StartGame", (gameState) => {
+            console.log(gameState);
+        });
+
+        connection.start();
+
+        return () => {
+            connection.off("LobbyUpdated");
+            connection.off("StartGame");
+            connection.stop();
+        }
+    }, []);
 
     const joinLobby = () => {
-        console.log(username);
-        if (!connectionIsConnectingOrConnected()) {
-            connection.start()
-                .then(() => {
-                    connection.invoke("ConnectPlayer", params.lobbyId, username);
-                });
+        if (connectionIsConnected()) {
+            connection.invoke("ConnectPlayer", params.lobbyId, username);
         }
     };
 
@@ -71,7 +71,7 @@ export const Lobby = () => {
     </>;
 
     return <TitleLayout>
-        {!connectionIsConnectingOrConnected() ?
+        {!lobbyData ?
             renderJoinLobby() :
             renderConnectedLobby()
         }
