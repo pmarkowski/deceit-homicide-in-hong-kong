@@ -15,7 +15,7 @@ public class PreGameState : State
         action switch
         {
             StartGameAction startGameAction => HandleAction(startGameAction),
-            _ => throw UnsupportedActionException()
+            _ => throw UnsupportedActionException(nameof(PreGameState), action.GetType().Name)
         };
 
     private CrimeState HandleAction(StartGameAction startGameAction)

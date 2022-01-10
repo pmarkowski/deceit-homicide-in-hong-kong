@@ -13,5 +13,6 @@ public abstract class State
 
     public abstract State Handle(ActionBase action);
 
-    protected Exception UnsupportedActionException() => new("Received unsupported action for state");
+    protected Exception UnsupportedActionException(string stateName, string actionName) =>
+        new($"Received unsupported action {actionName} for state {stateName}");
 }
