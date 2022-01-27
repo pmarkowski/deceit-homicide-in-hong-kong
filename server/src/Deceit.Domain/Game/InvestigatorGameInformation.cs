@@ -9,7 +9,7 @@ namespace Deceit.Domain.Game;
 /// </summary>
 public class InvestigatorGameInformation : PlayerGameInformation
 {
-    public string PlayerRole { get; }
+    public string Role { get; }
 
     public IEnumerable<InvestigatorWithoutRole> Investigators { get; }
 
@@ -17,7 +17,7 @@ public class InvestigatorGameInformation : PlayerGameInformation
         string playerRole,
         IEnumerable<InvestigatorWithoutRole> investigators)
     {
-        PlayerRole = playerRole;
+        Role = playerRole;
         Investigators = investigators;
     }
 }
