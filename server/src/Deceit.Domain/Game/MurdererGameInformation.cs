@@ -10,7 +10,8 @@ public class MurdererGameInformation : InvestigatorGameInformation
     public MurdererGameInformation(
         string playerRole,
         IEnumerable<InvestigatorWithoutRole> investigators,
-        KeyEvidence? keyEvidence) : base(playerRole, investigators)
+        KeyEvidence? keyEvidence)
+            : base(playerRole, investigators)
     {
         KeyEvidence = keyEvidence;
     }
