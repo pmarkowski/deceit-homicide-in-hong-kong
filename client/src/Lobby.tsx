@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import * as signalR from "@microsoft/signalr";
 import { TitleLayout } from "./TitleLayout";
 import { LobbyPlayerList } from "./LobbyPlayerList";
+import { Game, GameProps } from "./Game";
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/pregame`)
@@ -16,6 +17,7 @@ export const Lobby = () => {
 
     const [username, setUsername] = useState("");
     const [lobbyData, setLobbyData] = useState<any>(null);
+    const [gameData, setGameData] = useState<GameProps | null>(null);
 
     useEffect(() => {
         connection.on("LobbyUpdated", (lobby) => {
@@ -24,6 +26,20 @@ export const Lobby = () => {
 
         connection.on("StartGame", (gameState) => {
             console.log(gameState);
+            setGameData({
+                role: gameState.role,
+                forensicScientist: {
+                    username: lobbyData.players.find((player: any) => player.connectionId === lobbyData.forensicScientistId).name
+                },
+                sceneCards: [],
+                investigators: gameState.investigators.map((investigator: any) => ({
+                    playerId: lobbyData.players.find((player: any) => player.connectionId === investigator.playerId).name,
+                    role: investigator.role,
+                    hasBadge: true,
+                    evidence: investigator.evidenceCards,
+                    meansOfMurder: investigator.meansOfMurderCards
+                }))
+            });
         });
 
         connection.start();
@@ -70,10 +86,15 @@ export const Lobby = () => {
         <button className="btn btn-blue w-full" onClick={startGame}>Start Game</button>
     </>;
 
-    return <TitleLayout>
-        {!lobbyData ?
-            renderJoinLobby() :
-            renderConnectedLobby()
+    return <>
+        {gameData ?
+            <Game {...gameData} /> :
+            <TitleLayout>
+                {!lobbyData ?
+                    renderJoinLobby() :
+                    renderConnectedLobby()
+                }
+            </TitleLayout>
         }
-    </TitleLayout>;
+    </>;
 };
