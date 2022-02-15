@@ -3,7 +3,7 @@ using Deceit.Domain.Lobbies;
 
 namespace Deceit.Backend.Hubs;
 
-public interface IPreGameHubClient
+public interface IGameLobbyHubClient
 {
     Task LobbyUpdated(Lobby players);
     Task StartGame(PlayerGameInformation playerGameInformation);

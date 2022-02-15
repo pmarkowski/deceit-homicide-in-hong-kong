@@ -33,7 +33,7 @@ app.UseCors(builder =>
         .WithOrigins("http://localhost:3000")
 );
 
-app.MapHub<PreGameHub>("/pregame");
+app.MapHub<GameLobbyHub>("/gamelobby");
 app.MapRazorPages();
 
 app.MapPost("/lobby", (LobbyService lobbyService) =>
