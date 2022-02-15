@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-export const LobbyPlayerList: FC<{ connectedPlayers: any[], forensicScientistId: string }> = (props) =>
+export const GameLobbyPlayerList: FC<{ connectedPlayers: any[], forensicScientistId: string }> = (props) =>
     <>
         {props.connectedPlayers.map(player =>
             <p className="text-xl" key={player.connectionId}>

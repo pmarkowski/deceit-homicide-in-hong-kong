@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import * as signalR from "@microsoft/signalr";
 import { TitleLayout } from "./TitleLayout";
-import { LobbyPlayerList } from "./GameLobbyPlayerList";
+import { GameLobbyPlayerList } from "./GameLobbyPlayerList";
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/gamelobby`)
@@ -11,7 +11,7 @@ const connection = new signalR.HubConnectionBuilder()
 const connectionIsConnected = () =>
     (connection?.state === signalR.HubConnectionState.Connected);
 
-export const Lobby = () => {
+export const GameLobby = () => {
     const params = useParams();
 
     const [username, setUsername] = useState("");
@@ -64,7 +64,7 @@ export const Lobby = () => {
 
     const renderConnectedLobby = () => <>
         <div className="text-light">
-            <LobbyPlayerList connectedPlayers={lobbyData.players} forensicScientistId={lobbyData.forensicScientistId} />
+            <GameLobbyPlayerList connectedPlayers={lobbyData.players} forensicScientistId={lobbyData.forensicScientistId} />
         </div>
         <button className="btn btn-blue w-full" onClick={setPlayerToForensicScientist}>I want to be the Forensic Scientist</button>
         <button className="btn btn-blue w-full" onClick={startGame}>Start Game</button>
