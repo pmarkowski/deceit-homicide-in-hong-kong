@@ -8,7 +8,7 @@ namespace Deceit.Domain.Game;
 /// </summary>
 public class DeceitGame
 {
-    public ForensicScientist? ForensicScientist { get; internal set; }
+    internal ForensicScientist? ForensicScientist { get; set; }
     public IEnumerable<Investigator>? Investigators { get; internal set; }
     internal KeyEvidence? KeyEvidence { get; set; }
 
