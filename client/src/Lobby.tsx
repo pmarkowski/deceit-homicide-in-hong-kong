@@ -5,7 +5,7 @@ import { TitleLayout } from "./TitleLayout";
 import { LobbyPlayerList } from "./LobbyPlayerList";
 
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/pregame`)
+    .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/gamelobby`)
     .build();
 
 const connectionIsConnected = () =>

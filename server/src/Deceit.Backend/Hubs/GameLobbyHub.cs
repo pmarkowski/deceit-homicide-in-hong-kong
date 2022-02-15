@@ -4,11 +4,11 @@ using System.Text.Json;
 
 namespace Deceit.Backend.Hubs;
 
-class PreGameHub : Hub<IPreGameHubClient>
+class GameLobbyHub : Hub<IGameLobbyHubClient>
 {
     private readonly LobbyService lobbyService;
 
-    public PreGameHub(LobbyService lobbyService)
+    public GameLobbyHub(LobbyService lobbyService)
     {
         this.lobbyService = lobbyService;
     }
