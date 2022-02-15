@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router";
 import { LandingPage } from "./LandingPage";
 import { PageLayout } from "./PageLayout";
-import { Lobby } from "./Lobby";
+import { Lobby } from "./GameLobby";
 import { NotFound } from "./NotFound";
 
 function App() {

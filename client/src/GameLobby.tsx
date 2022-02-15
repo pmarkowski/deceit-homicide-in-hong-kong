@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import * as signalR from "@microsoft/signalr";
 import { TitleLayout } from "./TitleLayout";
-import { LobbyPlayerList } from "./LobbyPlayerList";
+import { LobbyPlayerList } from "./GameLobbyPlayerList";
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/gamelobby`)
