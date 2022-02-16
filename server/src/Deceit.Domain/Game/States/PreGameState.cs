@@ -1,4 +1,4 @@
-﻿using Deceit.Domain.Game.Evidence;
+using Deceit.Domain.Game.Evidence;
 using Deceit.Domain.Game.Players;
 using Deceit.Domain.Game.States.Actions;
 
@@ -11,7 +11,7 @@ public class PreGameState : State
     {
     }
 
-    public override State Handle(ActionBase action) =>
+    internal override State Handle(ActionBase action) =>
         action switch
         {
             StartGameAction startGameAction => HandleAction(startGameAction),
