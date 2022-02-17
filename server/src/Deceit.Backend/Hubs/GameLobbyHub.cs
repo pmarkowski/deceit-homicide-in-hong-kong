@@ -6,9 +6,9 @@ namespace Deceit.Backend.Hubs;
 
 class GameLobbyHub : Hub<IGameLobbyHubClient>
 {
-    private readonly LobbyService lobbyService;
+    private readonly GameLobbyService lobbyService;
 
-    public GameLobbyHub(LobbyService lobbyService)
+    public GameLobbyHub(GameLobbyService lobbyService)
     {
         this.lobbyService = lobbyService;
     }
@@ -94,7 +94,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         await base.OnDisconnectedAsync(exception);
     }
 
-    private void RemoveLobbyIfEmpty(Lobby lobby)
+    private void RemoveLobbyIfEmpty(GameLobby lobby)
     {
         if (!lobby.Players.Any())
         {

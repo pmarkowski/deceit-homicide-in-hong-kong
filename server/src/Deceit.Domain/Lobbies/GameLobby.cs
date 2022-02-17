@@ -4,7 +4,7 @@ using Deceit.Domain.Players;
 
 namespace Deceit.Domain.Lobbies;
 
-public class Lobby
+public class GameLobby
 {
     public string LobbyId { get; }
 
@@ -13,7 +13,7 @@ public class Lobby
 
     public DeceitContext DeceitContext { get; }
 
-    public Lobby(string lobbyId)
+    public GameLobby(string lobbyId)
     {
         LobbyId = lobbyId;
         players = new();

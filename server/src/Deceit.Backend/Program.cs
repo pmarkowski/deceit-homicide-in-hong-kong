@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSignalR();
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton<LobbyService>();
+builder.Services.AddSingleton<GameLobbyService>();
 
 builder.Services.AddCors();
 
@@ -36,9 +36,9 @@ app.UseCors(builder =>
 app.MapHub<GameLobbyHub>("/gamelobby");
 app.MapRazorPages();
 
-app.MapPost("/lobby", (LobbyService lobbyService) =>
+app.MapPost("/lobby", (GameLobbyService lobbyService) =>
 {
-    Lobby lobby = new(Guid.NewGuid().ToString());
+    GameLobby lobby = new(Guid.NewGuid().ToString());
     lobbyService.AddLobby(lobby);
     return lobby;
 });

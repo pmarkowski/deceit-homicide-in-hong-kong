@@ -6,9 +6,9 @@ namespace Deceit.Backend.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly LobbyService lobbyService;
+    private readonly GameLobbyService lobbyService;
 
-    public IndexModel(LobbyService lobbyService)
+    public IndexModel(GameLobbyService lobbyService)
     {
         this.lobbyService = lobbyService;
     }
@@ -17,7 +17,7 @@ public class IndexModel : PageModel
     {
         // generate new random lobby
         string lobbyId = Guid.NewGuid().ToString();
-        lobbyService.AddLobby(new Lobby(lobbyId));
+        lobbyService.AddLobby(new GameLobby(lobbyId));
 
         // redirect user to it
         return RedirectToPage("Lobby", new { lobbyId });

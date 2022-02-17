@@ -7,14 +7,14 @@ using Xunit;
 
 namespace Deceit.Backend.Tests.Domain.Lobbies;
 
-public class LobbyTests
+public class GameLobbyTests
 {
     readonly Fixture fixture = new();
 
     [Fact]
     public void DisconnectPlayer_GameHasNotYetStarted_PlayerRemovedFromLobby()
     {
-        Lobby lobby = new(fixture.Create<string>());
+        GameLobby lobby = new(fixture.Create<string>());
 
         var player = fixture.Create<Player>();
         lobby.ConnectPlayer(player);
@@ -27,7 +27,7 @@ public class LobbyTests
     [Fact]
     public void DisconnectPlayer_GameHasStarted_PlayerMarkedAsDisconnected()
     {
-        Lobby lobby = new(fixture.Create<string>());
+        GameLobby lobby = new(fixture.Create<string>());
 
         var player = fixture.Create<Player>();
         lobby.ConnectPlayer(player);

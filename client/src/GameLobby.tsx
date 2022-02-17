@@ -19,6 +19,7 @@ export const GameLobby = () => {
 
     useEffect(() => {
         connection.on("LobbyUpdated", (lobby) => {
+            console.log(lobby);
             setLobbyData(lobby);
         });
 
