@@ -31,6 +31,10 @@ public class PreGameState : State
 
     private PreGameState HandleAction(AddPlayerAction addPlayerAction)
     {
+        if (!playerIds.Any())
+        {
+            forensicScientistPlayerId = addPlayerAction.Data.ConnectionId;
+        }
         playerIds.Add(addPlayerAction.Data.ConnectionId);
         return this;
     }
