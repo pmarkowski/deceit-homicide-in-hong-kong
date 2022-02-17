@@ -21,11 +21,9 @@ public class CrimeStateTests
 
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
-        context.Handle(new StartGameAction(new()
-        {
-            Players = players,
-            ForensicScientistPlayerId = forensicScientist.ConnectionId
-        }));
+        context.SetupContextWithPlayers(players, forensicScientist);
+
+        context.Handle(new StartGameAction(new()));
 
         var nonMurderer = context.Game.Investigators!.First(investigator => investigator.Role != Roles.Murderer);
 
@@ -45,11 +43,8 @@ public class CrimeStateTests
 
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
-        context.Handle(new StartGameAction(new()
-        {
-            Players = players,
-            ForensicScientistPlayerId = forensicScientist.ConnectionId
-        }));
+        context.SetupContextWithPlayers(players, forensicScientist);
+        context.Handle(new StartGameAction(new()));
 
         var murderer = context.Game.Investigators!.Single(investigator => investigator.Role == Roles.Murderer);
 
@@ -58,6 +53,7 @@ public class CrimeStateTests
             murderer.MeansOfMurderCards.First());
         context.Handle(new SelectMeansOfMurderAction(selectedKeyEvidence));
 
+        // TODO: This interface doesn't seem quite right. Pass in a Player object here instead?
         var forensicScientistInformation = context.Game.GetGameInformationForPlayer(forensicScientist.ConnectionId);
 
         forensicScientistInformation.Should().BeOfType<ForensicScientistGameInformation>()
@@ -72,11 +68,8 @@ public class CrimeStateTests
 
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
-        context.Handle(new StartGameAction(new()
-        {
-            Players = players,
-            ForensicScientistPlayerId = forensicScientist.ConnectionId
-        }));
+        context.SetupContextWithPlayers(players, forensicScientist);
+        context.Handle(new StartGameAction(new()));
 
         // TODO: Most of the public interface obscures this information, but you can
         // still figure out the murderer from the public interface through this.

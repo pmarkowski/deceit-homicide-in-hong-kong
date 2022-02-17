@@ -9,7 +9,7 @@ public class CrimeState : State
     {
     }
 
-    public override State Handle(ActionBase action) =>
+    internal override State Handle(ActionBase action) =>
         action switch
         {
             SelectMeansOfMurderAction meansOfMurderAction => HandleAction(meansOfMurderAction),
