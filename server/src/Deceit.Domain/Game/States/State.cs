@@ -11,7 +11,7 @@ public abstract class State
         this.context = context;
     }
 
-    public abstract State Handle(ActionBase action);
+    internal abstract State Handle(ActionBase action);
 
     protected Exception UnsupportedActionException(string stateName, string actionName) =>
         new($"Received unsupported action {actionName} for state {stateName}");

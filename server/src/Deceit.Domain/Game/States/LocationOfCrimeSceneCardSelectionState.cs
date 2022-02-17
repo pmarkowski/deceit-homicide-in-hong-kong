@@ -9,7 +9,7 @@ internal class LocationOfCrimeSceneCardSelectionState : State
     {
     }
 
-    public override State Handle(ActionBase action)
+    internal override State Handle(ActionBase action)
     {
         throw new NotImplementedException();
     }

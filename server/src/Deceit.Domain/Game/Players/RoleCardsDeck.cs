@@ -2,7 +2,7 @@ namespace Deceit.Domain.Game.Players;
 
 public class InvestigatorRoleCardsDeck : Deck<string>
 {
-    public InvestigatorRoleCardsDeck(int numberOfPlayers) : base(GenerateDeckForPlayers(numberOfPlayers))
+    public InvestigatorRoleCardsDeck(int numberOfInvestigators) : base(GenerateDeckForPlayers(numberOfInvestigators))
     {
     }
 
