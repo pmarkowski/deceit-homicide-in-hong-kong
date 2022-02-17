@@ -49,7 +49,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         {
             throw new HubException("Lobby not found");
         }
-        lobby.AddPlayer(new Domain.Players.Player(Context.ConnectionId, name, true));
+        lobby.ConnectPlayer(new Domain.Players.Player(Context.ConnectionId, name, true));
         await Groups.AddToGroupAsync(Context.ConnectionId, lobbyId);
 
         await Clients.Group(lobbyId).LobbyUpdated(lobby);
@@ -58,7 +58,8 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
     public async Task SetConnectionToForensicScientist()
     {
         var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
-        lobby.SetForensicScientistPlayer(Context.ConnectionId);
+        // Do we still need this Hub Method? Clients can now dispatch this action directly
+        lobby.DeceitContext.Handle(new Domain.Game.States.Actions.SetForensicScientistAction(new(Context.ConnectionId)));
         await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby);
     }
 

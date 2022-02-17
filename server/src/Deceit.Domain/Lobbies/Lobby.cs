@@ -11,8 +11,6 @@ public class Lobby
     readonly List<Player> players;
     public IEnumerable<Player> Players => players;
 
-    public string? ForensicScientistId { get; private set; }
-
     public DeceitContext DeceitContext { get; }
 
     public Lobby(string lobbyId)
@@ -22,23 +20,36 @@ public class Lobby
         DeceitContext = new();
     }
 
-    public void AddPlayer(Player player)
+    public void ConnectPlayer(Player player)
     {
-        players.Add(player);
-        SetForensicScientistForFirstPlayer(player);
-    }
-
-    private void SetForensicScientistForFirstPlayer(Player player)
-    {
-        if (players.Count == 1)
+        if (!DeceitContext.IsInState<PreGameState>())
         {
-            SetForensicScientistPlayer(player.ConnectionId);
+            if (PlayerIsInLobbyAndDisconnected(player))
+            {
+                ReconnectPlayer(player);
+            }
+            else
+            {
+                throw new InvalidOperationException("Cannot add a new player to a game that is in progress");
+            }
+        }
+        else
+        {
+            players.Add(player);
+            DeceitContext.Handle(new AddPlayerAction(player));
         }
     }
 
-    public void SetForensicScientistPlayer(string connectionId)
+    private void ReconnectPlayer(Player player)
     {
-        ForensicScientistId = connectionId;
+        players
+            .Single(p => p.ConnectionId == player.ConnectionId)
+            .IsConnected = true;
+    }
+
+    private bool PlayerIsInLobbyAndDisconnected(Player player)
+    {
+        return players.Any(p => p.ConnectionId == player.ConnectionId && !p.IsConnected);
     }
 
     public void DisconnectPlayer(string connectionId)
@@ -53,12 +64,10 @@ public class Lobby
         }
     }
 
+    // Is this a worthwhile abstraction or should this also just be handled
+    // via consumers directly passing StartGameAction to deceit context?
     public void StartGame()
     {
-        DeceitContext.Handle(new StartGameAction(new()
-        {
-            Players = players,
-            ForensicScientistPlayerId = ForensicScientistId
-        }));
+        DeceitContext.Handle(new StartGameAction(new()));
     }
 }
