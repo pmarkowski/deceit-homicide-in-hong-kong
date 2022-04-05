@@ -14,7 +14,7 @@ const connectionIsConnected = () =>
 export const GameLobby = () => {
     const params = useParams();
 
-    const playerId = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
+    const [playerId] = useState(crypto.getRandomValues(new Uint32Array(1))[0].toString(16));
     const [username, setUsername] = useState("");
     const [lobbyData, setLobbyData] = useState<any>(null);
 
@@ -34,6 +34,7 @@ export const GameLobby = () => {
             connection.off("LobbyUpdated");
             connection.off("StartGame");
             connection.stop();
+            console.log("Cleaning up connection");
         }
     }, []);
 
