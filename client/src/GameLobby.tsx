@@ -7,7 +7,7 @@ import { GameLobbyPlayerList } from "./GameLobbyPlayerList";
 const playerId = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
 
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/gamelobby?playerId=${playerId}`, {})
+    .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/gamelobby?playerId=${playerId}`)
     .build();
 
 const connectionIsConnected = () =>
