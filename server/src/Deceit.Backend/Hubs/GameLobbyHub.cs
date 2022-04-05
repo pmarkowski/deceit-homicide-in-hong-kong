@@ -13,6 +13,9 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         this.lobbyService = lobbyService;
     }
 
+    private string UserIdentifier =>
+        Context.UserIdentifier ?? throw new Exception("User with no identifier found");
+
     // Can kind of simplify down to a really straightforward hub with nearly one method now.
     public async Task SubmitAction(string actionType, JsonDocument action)
     {
@@ -21,7 +24,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         // Dispatch action to context
         // persist new state
         // distribute state
-        var playerId = Context.UserIdentifier;
+        var playerId = UserIdentifier;
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         try
         {
@@ -49,7 +52,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         {
             throw new HubException("Lobby not found");
         }
-        var playerId = Context.UserIdentifier;
+        var playerId = UserIdentifier;
         lobby.ConnectPlayer(new Domain.Players.Player(playerId, name, true));
         await Groups.AddToGroupAsync(Context.ConnectionId, lobbyId);
 
@@ -58,7 +61,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
 
     public async Task SetConnectionToForensicScientist()
     {
-        var playerId = Context.UserIdentifier;
+        var playerId = UserIdentifier;
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         // Do we still need this Hub Method? Clients can now dispatch this action directly
         lobby.DeceitContext.Handle(new Domain.Game.States.Actions.SetForensicScientistAction(new(playerId)));
@@ -67,7 +70,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
 
     public async Task StartGameInLobby()
     {
-        var playerId = Context.UserIdentifier;
+        var playerId = UserIdentifier;
 
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         lobby.StartGame();
@@ -89,7 +92,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        var playerId = Context.UserIdentifier;
+        var playerId = UserIdentifier;
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         lobby.DisconnectPlayer(playerId);
         RemoveLobbyIfEmpty(lobby);
