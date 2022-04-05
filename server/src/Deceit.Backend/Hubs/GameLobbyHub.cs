@@ -1,4 +1,3 @@
-using Deceit.Domain.Connectivity;
 using Deceit.Domain.Lobbies;
 using Microsoft.AspNetCore.SignalR;
 using System.Text.Json;
@@ -7,13 +6,11 @@ namespace Deceit.Backend.Hubs;
 
 class GameLobbyHub : Hub<IGameLobbyHubClient>
 {
-    private readonly ConnectionService connectionService;
     private readonly GameLobbyService lobbyService;
 
-    public GameLobbyHub(GameLobbyService lobbyService, ConnectionService connectionService)
+    public GameLobbyHub(GameLobbyService lobbyService)
     {
         this.lobbyService = lobbyService;
-        this.connectionService = connectionService;
     }
 
     // Can kind of simplify down to a really straightforward hub with nearly one method now.
@@ -24,7 +21,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         // Dispatch action to context
         // persist new state
         // distribute state
-        var playerId = connectionService.GetPlayerIdForConnection(Context.ConnectionId);
+        var playerId = Context.UserIdentifier;
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         try
         {
@@ -38,12 +35,12 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         }
 
         await Task.WhenAll(lobby.Players.Select(player =>
-            Clients.Client(player.PlayerId)
+            Clients.User(player.PlayerId)
                 .GameUpdated(
                     lobby.DeceitContext.Game.GetGameInformationForPlayer(player.PlayerId))));
     }
 
-    public async Task ConnectPlayer(string lobbyId, string name, string playerId)
+    public async Task ConnectPlayer(string lobbyId, string name)
     {
         // Feel like players should have some client side generated ID persisted
         // in localstorage that can be used to rejoin?
@@ -52,16 +49,16 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         {
             throw new HubException("Lobby not found");
         }
+        var playerId = Context.UserIdentifier;
         lobby.ConnectPlayer(new Domain.Players.Player(playerId, name, true));
         await Groups.AddToGroupAsync(Context.ConnectionId, lobbyId);
-        connectionService.AddPlayerIdForConnection(Context.ConnectionId, playerId);
 
         await Clients.Group(lobbyId).LobbyUpdated(lobby);
     }
 
     public async Task SetConnectionToForensicScientist()
     {
-        var playerId = connectionService.GetPlayerIdForConnection(Context.ConnectionId);
+        var playerId = Context.UserIdentifier;
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         // Do we still need this Hub Method? Clients can now dispatch this action directly
         lobby.DeceitContext.Handle(new Domain.Game.States.Actions.SetForensicScientistAction(new(playerId)));
@@ -70,7 +67,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
 
     public async Task StartGameInLobby()
     {
-        var playerId = connectionService.GetPlayerIdForConnection(Context.ConnectionId);
+        var playerId = Context.UserIdentifier;
 
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         lobby.StartGame();
@@ -85,18 +82,17 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         // has all public information and only their private information
 
         await Task.WhenAll(lobby.Players.Select(player =>
-            Clients.Client(player.PlayerId)
+            Clients.User(player.PlayerId)
                 .StartGame(
                     lobby.DeceitContext.Game.GetGameInformationForPlayer(player.PlayerId))));
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        var playerId = connectionService.GetPlayerIdForConnection(Context.ConnectionId);
+        var playerId = Context.UserIdentifier;
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         lobby.DisconnectPlayer(playerId);
         RemoveLobbyIfEmpty(lobby);
-        connectionService.RemoveConnection(Context.ConnectionId);
         await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby);
 
         await base.OnDisconnectedAsync(exception);

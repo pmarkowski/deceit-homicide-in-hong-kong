@@ -4,8 +4,10 @@ import * as signalR from "@microsoft/signalr";
 import { TitleLayout } from "./TitleLayout";
 import { GameLobbyPlayerList } from "./GameLobbyPlayerList";
 
+const playerId = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
+
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/gamelobby`)
+    .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/gamelobby?playerId=${playerId}`, {})
     .build();
 
 const connectionIsConnected = () =>
@@ -14,7 +16,6 @@ const connectionIsConnected = () =>
 export const GameLobby = () => {
     const params = useParams();
 
-    const [playerId] = useState(crypto.getRandomValues(new Uint32Array(1))[0].toString(16));
     const [username, setUsername] = useState("");
     const [lobbyData, setLobbyData] = useState<any>(null);
 
@@ -40,7 +41,7 @@ export const GameLobby = () => {
 
     const joinLobby = () => {
         if (connectionIsConnected()) {
-            connection.invoke("ConnectPlayer", params.lobbyId, username, playerId);
+            connection.invoke("ConnectPlayer", params.lobbyId, username);
         }
     };
 
