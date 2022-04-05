@@ -19,7 +19,7 @@ public class GameLobbyTests
         var player = fixture.Create<Player>();
         lobby.ConnectPlayer(player);
 
-        lobby.DisconnectPlayer(player.ConnectionId);
+        lobby.DisconnectPlayer(player.PlayerId);
 
         lobby.Players.Should().BeEmpty();
     }
@@ -31,10 +31,10 @@ public class GameLobbyTests
 
         var player = fixture.Create<Player>();
         lobby.ConnectPlayer(player);
-        lobby.DeceitContext.Handle(new SetForensicScientistAction(new(player.ConnectionId)));
+        lobby.DeceitContext.Handle(new SetForensicScientistAction(new(player.PlayerId)));
         lobby.StartGame();
 
-        lobby.DisconnectPlayer(player.ConnectionId);
+        lobby.DisconnectPlayer(player.PlayerId);
 
         lobby.Players.Should().NotBeEmpty();
         lobby.Players.Should().ContainEquivalentOf(player).Which.IsConnected.Should().BeFalse();

@@ -1,4 +1,5 @@
 using Deceit.Backend.Hubs;
+using Deceit.Domain.Connectivity;
 using Deceit.Domain.Lobbies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSignalR();
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton<ConnectionService>();
 builder.Services.AddSingleton<GameLobbyService>();
 
 builder.Services.AddCors();

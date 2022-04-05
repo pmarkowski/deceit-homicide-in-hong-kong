@@ -43,24 +43,24 @@ public class GameLobby
     private void ReconnectPlayer(Player player)
     {
         players
-            .Single(p => p.ConnectionId == player.ConnectionId)
+            .Single(p => p.PlayerId == player.PlayerId)
             .IsConnected = true;
     }
 
     private bool PlayerIsInLobbyAndDisconnected(Player player)
     {
-        return players.Any(p => p.ConnectionId == player.ConnectionId && !p.IsConnected);
+        return players.Any(p => p.PlayerId == player.PlayerId && !p.IsConnected);
     }
 
-    public void DisconnectPlayer(string connectionId)
+    public void DisconnectPlayer(string playerId)
     {
         if (DeceitContext.IsInState<PreGameState>())
         {
-            players.RemoveAt(players.FindIndex(player => player.ConnectionId == connectionId));
+            players.RemoveAt(players.FindIndex(player => player.PlayerId == playerId));
         }
         else
         {
-            players.Single(player => player.ConnectionId == connectionId).IsConnected = false;
+            players.Single(player => player.PlayerId == playerId).IsConnected = false;
         }
     }
 

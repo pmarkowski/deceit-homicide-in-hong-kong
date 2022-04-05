@@ -14,6 +14,7 @@ const connectionIsConnected = () =>
 export const GameLobby = () => {
     const params = useParams();
 
+    const playerId = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
     const [username, setUsername] = useState("");
     const [lobbyData, setLobbyData] = useState<any>(null);
 
@@ -38,7 +39,7 @@ export const GameLobby = () => {
 
     const joinLobby = () => {
         if (connectionIsConnected()) {
-            connection.invoke("ConnectPlayer", params.lobbyId, username);
+            connection.invoke("ConnectPlayer", params.lobbyId, username, playerId);
         }
     };
 

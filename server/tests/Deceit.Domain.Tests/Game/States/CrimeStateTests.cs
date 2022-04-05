@@ -54,7 +54,7 @@ public class CrimeStateTests
         context.Handle(new SelectMeansOfMurderAction(selectedKeyEvidence));
 
         // TODO: This interface doesn't seem quite right. Pass in a Player object here instead?
-        var forensicScientistInformation = context.Game.GetGameInformationForPlayer(forensicScientist.ConnectionId);
+        var forensicScientistInformation = context.Game.GetGameInformationForPlayer(forensicScientist.PlayerId);
 
         forensicScientistInformation.Should().BeOfType<ForensicScientistGameInformation>()
             .Which.KeyEvidence.Should().NotBeNull()
