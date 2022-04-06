@@ -11,6 +11,6 @@ static class StateSetups
             context.Handle(new AddPlayerAction(player));
         }
 
-        context.Handle(new SetForensicScientistAction(new(forensicScientist.ConnectionId)));
+        context.Handle(new SetForensicScientistAction(new(forensicScientist.PlayerId)));
     }
 }

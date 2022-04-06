@@ -33,9 +33,9 @@ public class PreGameState : State
     {
         if (!playerIds.Any())
         {
-            forensicScientistPlayerId = addPlayerAction.Data.ConnectionId;
+            forensicScientistPlayerId = addPlayerAction.Data.PlayerId;
         }
-        playerIds.Add(addPlayerAction.Data.ConnectionId);
+        playerIds.Add(addPlayerAction.Data.PlayerId);
         return this;
     }
 

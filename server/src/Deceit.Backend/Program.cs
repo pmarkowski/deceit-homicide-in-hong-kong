@@ -1,5 +1,6 @@
 using Deceit.Backend.Hubs;
 using Deceit.Domain.Lobbies;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSignalR();
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<GameLobbyService>();
+builder.Services.AddSingleton<IUserIdProvider, PlayerIdFromQueryUserIdProvider>();
 
 builder.Services.AddCors();
 

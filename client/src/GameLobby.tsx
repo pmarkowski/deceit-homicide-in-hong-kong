@@ -4,8 +4,10 @@ import * as signalR from "@microsoft/signalr";
 import { TitleLayout } from "./TitleLayout";
 import { GameLobbyPlayerList } from "./GameLobbyPlayerList";
 
+const playerId = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
+
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/gamelobby`)
+    .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/gamelobby?playerId=${playerId}`)
     .build();
 
 const connectionIsConnected = () =>
@@ -33,6 +35,7 @@ export const GameLobby = () => {
             connection.off("LobbyUpdated");
             connection.off("StartGame");
             connection.stop();
+            console.log("Cleaning up connection");
         }
     }, []);
 

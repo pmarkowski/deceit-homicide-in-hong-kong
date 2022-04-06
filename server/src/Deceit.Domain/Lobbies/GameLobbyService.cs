@@ -20,11 +20,11 @@ public class GameLobbyService
         lobbies[lobby.LobbyId] = lobby;
     }
 
-    public GameLobby GetLobbyWithPlayer(string connectionId)
+    public GameLobby GetLobbyWithPlayer(string playerId)
     {
         return lobbies
             .First(keyValuePair => keyValuePair.Value.Players
-                .Any(player => player.ConnectionId == connectionId))
+                .Any(player => player.PlayerId == playerId))
             .Value;
     }
 

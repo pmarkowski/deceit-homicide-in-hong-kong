@@ -13,16 +13,19 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         this.lobbyService = lobbyService;
     }
 
+    private string UserIdentifier =>
+        Context.UserIdentifier ?? throw new Exception("User with no identifier found");
+
     // Can kind of simplify down to a really straightforward hub with nearly one method now.
     public async Task SubmitAction(string actionType, JsonDocument action)
     {
-
         // Get context for connection
         // create Action object
         // Dispatch action to context
         // persist new state
         // distribute state
-        var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
+        var playerId = UserIdentifier;
+        var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         try
         {
             var deserializedAction = ActionFactory.CreateAction(actionType, action);
@@ -35,9 +38,9 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         }
 
         await Task.WhenAll(lobby.Players.Select(player =>
-            Clients.Client(player.ConnectionId)
+            Clients.User(player.PlayerId)
                 .GameUpdated(
-                    lobby.DeceitContext.Game.GetGameInformationForPlayer(player.ConnectionId))));
+                    lobby.DeceitContext.Game.GetGameInformationForPlayer(player.PlayerId))));
     }
 
     public async Task ConnectPlayer(string lobbyId, string name)
@@ -49,7 +52,8 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         {
             throw new HubException("Lobby not found");
         }
-        lobby.ConnectPlayer(new Domain.Players.Player(Context.ConnectionId, name, true));
+        var playerId = UserIdentifier;
+        lobby.ConnectPlayer(new Domain.Players.Player(playerId, name, true));
         await Groups.AddToGroupAsync(Context.ConnectionId, lobbyId);
 
         await Clients.Group(lobbyId).LobbyUpdated(lobby);
@@ -57,15 +61,18 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
 
     public async Task SetConnectionToForensicScientist()
     {
-        var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
+        var playerId = UserIdentifier;
+        var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         // Do we still need this Hub Method? Clients can now dispatch this action directly
-        lobby.DeceitContext.Handle(new Domain.Game.States.Actions.SetForensicScientistAction(new(Context.ConnectionId)));
+        lobby.DeceitContext.Handle(new Domain.Game.States.Actions.SetForensicScientistAction(new(playerId)));
         await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby);
     }
 
     public async Task StartGameInLobby()
     {
-        var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
+        var playerId = UserIdentifier;
+
+        var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         lobby.StartGame();
 
         // Send message telling clients to connect to Game hub instead?
@@ -78,17 +85,17 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         // has all public information and only their private information
 
         await Task.WhenAll(lobby.Players.Select(player =>
-            Clients.Client(player.ConnectionId)
+            Clients.User(player.PlayerId)
                 .StartGame(
-                    lobby.DeceitContext.Game.GetGameInformationForPlayer(player.ConnectionId))));
+                    lobby.DeceitContext.Game.GetGameInformationForPlayer(player.PlayerId))));
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        var lobby = lobbyService.GetLobbyWithPlayer(Context.ConnectionId);
-        lobby.DisconnectPlayer(Context.ConnectionId);
+        var playerId = UserIdentifier;
+        var lobby = lobbyService.GetLobbyWithPlayer(playerId);
+        lobby.DisconnectPlayer(playerId);
         RemoveLobbyIfEmpty(lobby);
-
         await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby);
 
         await base.OnDisconnectedAsync(exception);
