@@ -11,7 +11,7 @@ export const LandingPage = () => {
 
     useEffect(() => {
         if (isCreatingLobby) {
-            axios.post(`${process.env.REACT_APP_SERVER_BASE_URL}/lobby`)
+            axios.post(`${process.env.REACT_APP_SERVER_BASE_URL}/api/lobby`)
                 .then(response => {
                     setIsCreatingLobby(false);
                     navigate(`/lobby/${response.data.lobbyId}`);

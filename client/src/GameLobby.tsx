@@ -1,8 +1,9 @@
+import * as signalR from "@microsoft/signalr";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import * as signalR from "@microsoft/signalr";
-import { TitleLayout } from "./TitleLayout";
 import { GameLobbyPlayerList } from "./GameLobbyPlayerList";
+import { TitleLayout } from "./TitleLayout";
 
 const playerId = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
 
@@ -13,35 +14,61 @@ const connection = new signalR.HubConnectionBuilder()
 const connectionIsConnected = () =>
     (connection?.state === signalR.HubConnectionState.Connected);
 
+enum LobbyState {
+    LOADING,
+    DOES_NOT_EXIST,
+    JOINABLE
+};
+
 export const GameLobby = () => {
     const params = useParams();
+    const lobbyId = params.lobbyId
 
     const [username, setUsername] = useState("");
     const [lobbyData, setLobbyData] = useState<any>(null);
 
+    const cleanUpSignalRConnection = () => {
+        connection.off("LobbyUpdated");
+        connection.off("StartGame");
+        connection.stop();
+    }
+
+    const [lobbyState, setLobbyState] = useState<LobbyState>(LobbyState.LOADING);
     useEffect(() => {
-        connection.on("LobbyUpdated", (lobby) => {
-            console.log(lobby);
-            setLobbyData(lobby);
-        });
+        const getLobby = async () => {
+            const getLobbyResult = await axios.get(
+                `${process.env.REACT_APP_SERVER_BASE_URL}/api/lobby/${lobbyId}`,
+                {
+                    validateStatus: (status) =>
+                        (200 <= status && status < 300) ||
+                        status === 404
+                });
 
-        connection.on("StartGame", (gameState) => {
-            console.log(gameState);
-        });
+            if (getLobbyResult.status === 404) {
+                setLobbyState(LobbyState.DOES_NOT_EXIST);
+                return;
+            }
+            setLobbyState(LobbyState.JOINABLE);
+            connection.on("LobbyUpdated", (lobby) => {
+                console.log(lobby);
+                setLobbyData(lobby);
+            });
 
-        connection.start();
+            connection.on("StartGame", (gameState) => {
+                console.log(gameState);
+            });
 
-        return () => {
-            connection.off("LobbyUpdated");
-            connection.off("StartGame");
-            connection.stop();
-            console.log("Cleaning up connection");
-        }
-    }, []);
+            connection.start();
+        };
+
+        getLobby();
+
+        return cleanUpSignalRConnection;
+    }, [lobbyId]);
 
     const joinLobby = () => {
         if (connectionIsConnected()) {
-            connection.invoke("ConnectPlayer", params.lobbyId, username);
+            connection.invoke("ConnectPlayer", lobbyId, username);
         }
     };
 
@@ -74,10 +101,25 @@ export const GameLobby = () => {
         <button className="btn btn-blue w-full" onClick={startGame}>Start Game</button>
     </>;
 
-    return <TitleLayout>
-        {!lobbyData ?
-            renderJoinLobby() :
-            renderConnectedLobby()
+    const renderLobby = (lobbyState: LobbyState) => {
+        switch (lobbyState) {
+            case LobbyState.LOADING:
+                return <span className="text-light text-xl">Loading...</span>;
+            case LobbyState.DOES_NOT_EXIST:
+                return <>
+                    <span className="text-light text-xl">Lobby not found</span>
+                    <a href="/" className="btn btn-blue w-full">Return to Main Menu</a>
+                </>;
+            case LobbyState.JOINABLE:
+                return !lobbyData ?
+                    renderJoinLobby() :
+                    renderConnectedLobby();
+            default:
+                break;
         }
+    }
+
+    return <TitleLayout>
+        {renderLobby(lobbyState)}
     </TitleLayout>;
 };
