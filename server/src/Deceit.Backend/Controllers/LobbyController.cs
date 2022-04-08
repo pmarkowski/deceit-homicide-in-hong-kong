@@ -1,7 +1,7 @@
 using Deceit.Domain.Lobbies;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Deceit.Backend
+namespace Deceit.Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
