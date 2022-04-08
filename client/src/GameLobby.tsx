@@ -104,9 +104,12 @@ export const GameLobby = () => {
     const renderLobby = (lobbyState: LobbyState) => {
         switch (lobbyState) {
             case LobbyState.LOADING:
-                return <span className="text-light text-xl">Loading...</span>
+                return <span className="text-light text-xl">Loading...</span>;
             case LobbyState.DOES_NOT_EXIST:
-                return <span className="text-light text-xl">Lobby not found</span>
+                return <>
+                    <span className="text-light text-xl">Lobby not found</span>
+                    <a href="/" className="btn btn-blue w-full">Return to Main Menu</a>
+                </>;
             case LobbyState.JOINABLE:
                 return !lobbyData ?
                     renderJoinLobby() :
