@@ -22,21 +22,41 @@ public class GameLobby
 
     public void ConnectPlayer(Player player)
     {
-        if (!DeceitContext.IsInState<PreGameState>())
+        if (!PlayerCanConnect(player.PlayerId))
         {
-            if (PlayerIsInLobbyAndDisconnected(player))
-            {
-                ReconnectPlayer(player);
-            }
-            else
-            {
-                throw new InvalidOperationException("Cannot add a new player to a game that is in progress");
-            }
+            throw new InvalidOperationException("Cannot add a new player to a game that is in progress");
+        }
+
+        if (PlayerIsInLobbyAndDisconnected(player))
+        {
+            ReconnectPlayer(player);
         }
         else
         {
             players.Add(player);
             DeceitContext.Handle(new AddPlayerAction(player));
+        }
+    }
+
+    public bool PlayerCanConnect(string playerId)
+    {
+        // This can occur if a player is opening another connection in a new tab,
+        // on another device, or, if they were previously connected and are now
+        // seeking to reconnect
+        if (players.Any(player => player.PlayerId == playerId))
+        {
+            return true;
+        }
+        // Before the game has started, then anyone can join
+        else if (DeceitContext.IsInState<PreGameState>())
+        {
+            return true;
+        }
+        // Once the game has started, and it is not a player already in the lobby,
+        // then new players are not allowed to join
+        else
+        {
+            return false;
         }
     }
 
