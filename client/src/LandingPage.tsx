@@ -7,20 +7,24 @@ export const LandingPage = () => {
 
     const [isCreatingLobby, setIsCreatingLobby] = useState(false)
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     useEffect(() => {
+        const createAndNavigateToLobby = async () => {
+            try {
+                const response = await axios.post(`${process.env.REACT_APP_SERVER_BASE_URL}/api/lobby`)
+                setIsCreatingLobby(false);
+                navigate(`/lobby/${response.data.lobbyId}`);
+            }
+            catch (error) {
+                console.log(error);
+                alert(error);
+                setIsCreatingLobby(false);
+            }
+        };
+
         if (isCreatingLobby) {
-            axios.post(`${process.env.REACT_APP_SERVER_BASE_URL}/api/lobby`)
-                .then(response => {
-                    setIsCreatingLobby(false);
-                    navigate(`/lobby/${response.data.lobbyId}`);
-                })
-                .catch(error => {
-                    console.log(error);
-                    alert(error);
-                    setIsCreatingLobby(false);
-                });
+            createAndNavigateToLobby();
         }
     }, [isCreatingLobby, navigate]);
 

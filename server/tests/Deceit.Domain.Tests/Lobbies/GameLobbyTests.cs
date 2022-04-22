@@ -9,13 +9,12 @@ namespace Deceit.Backend.Tests.Domain.Lobbies;
 
 public class GameLobbyTests
 {
-    readonly Fixture fixture = new();
+    static readonly Fixture fixture = new();
+    GameLobby lobby = new(fixture.Create<string>());
 
     [Fact]
     public void DisconnectPlayer_GameHasNotYetStarted_PlayerRemovedFromLobby()
     {
-        GameLobby lobby = new(fixture.Create<string>());
-
         var player = fixture.Create<Player>();
         lobby.ConnectPlayer(player);
 
@@ -27,8 +26,6 @@ public class GameLobbyTests
     [Fact]
     public void DisconnectPlayer_GameHasStarted_PlayerMarkedAsDisconnected()
     {
-        GameLobby lobby = new(fixture.Create<string>());
-
         var player = fixture.Create<Player>();
         lobby.ConnectPlayer(player);
         lobby.DeceitContext.Handle(new SetForensicScientistAction(new(player.PlayerId)));
@@ -38,5 +35,33 @@ public class GameLobbyTests
 
         lobby.Players.Should().NotBeEmpty();
         lobby.Players.Should().ContainEquivalentOf(player).Which.IsConnected.Should().BeFalse();
+    }
+
+    [Fact]
+    public void ConnectPlayer_GameHasStartedWithoutPlayer_PlayerRejected()
+    {
+        var player = fixture.Create<Player>();
+        lobby.DeceitContext.Handle(new SetForensicScientistAction(new(player.PlayerId)));
+        lobby.StartGame();
+        var player2 = fixture.Create<Player>();
+
+        var connectPlayerAction = () => lobby.ConnectPlayer(player2);
+
+        connectPlayerAction.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void ConnectPlayer_GameHasStartedWithPlayerWhoDisconnected_PlayerConnects()
+    {
+        var player = fixture.Create<Player>();
+        lobby.ConnectPlayer(player);
+        lobby.DeceitContext.Handle(new SetForensicScientistAction(new(player.PlayerId)));
+        lobby.StartGame();
+        lobby.DisconnectPlayer(player.PlayerId);
+
+        lobby.ConnectPlayer(player);
+
+        lobby.Players.Should().NotBeEmpty();
+        lobby.Players.Should().ContainEquivalentOf(player).Which.IsConnected.Should().BeTrue();
     }
 }

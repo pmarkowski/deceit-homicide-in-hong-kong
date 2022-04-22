@@ -17,6 +17,7 @@ const connectionIsConnected = () =>
 enum LobbyState {
     LOADING,
     DOES_NOT_EXIST,
+    NOT_JOINABLE,
     JOINABLE
 };
 
@@ -39,6 +40,7 @@ export const GameLobby = () => {
             const getLobbyResult = await axios.get(
                 `${process.env.REACT_APP_SERVER_BASE_URL}/api/lobby/${lobbyId}`,
                 {
+                    headers: { "Player-Id": playerId },
                     validateStatus: (status) =>
                         (200 <= status && status < 300) ||
                         status === 404
@@ -48,7 +50,12 @@ export const GameLobby = () => {
                 setLobbyState(LobbyState.DOES_NOT_EXIST);
                 return;
             }
-            setLobbyState(LobbyState.JOINABLE);
+
+            if (!getLobbyResult.data.isJoinable) {
+                setLobbyState(LobbyState.NOT_JOINABLE);
+                return;
+            }
+
             connection.on("LobbyUpdated", (lobby) => {
                 console.log(lobby);
                 setLobbyData(lobby);
@@ -59,6 +66,8 @@ export const GameLobby = () => {
             });
 
             connection.start();
+
+            setLobbyState(LobbyState.JOINABLE);
         };
 
         getLobby();
@@ -110,6 +119,8 @@ export const GameLobby = () => {
                     <span className="text-light text-xl">Lobby not found</span>
                     <a href="/" className="btn btn-blue w-full">Return to Main Menu</a>
                 </>;
+            case LobbyState.NOT_JOINABLE:
+                return <span className="text-light text-xl">Cannot join as a new player for a game already in progress</span>;
             case LobbyState.JOINABLE:
                 return !lobbyData ?
                     renderJoinLobby() :

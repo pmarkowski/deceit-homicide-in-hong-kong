@@ -15,7 +15,7 @@ namespace Deceit.Backend.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<GameLobby> Get(string id)
+        public ActionResult<LobbyResponse> Get(string id, [FromHeader(Name = "Player-Id")] string playerId)
         {
             var lobby = lobbyService.FindLobby(id);
 
@@ -24,18 +24,20 @@ namespace Deceit.Backend.Controllers
                 return NotFound();
             }
 
-            return lobby;
+            var playerCanJoinLobbyResult = lobby.PlayerCanConnect(playerId);
+
+            return new LobbyResponse(lobby.LobbyId, playerCanJoinLobbyResult);
         }
 
         [HttpPost]
-        public ActionResult Post()
+        public ActionResult<LobbyResponse> Post()
         {
             GameLobby lobby = new(Guid.NewGuid().ToString());
             lobbyService.AddLobby(lobby);
             return CreatedAtAction(
                 nameof(Get),
                 new { id = lobby.LobbyId },
-                lobby);
+                new LobbyResponse(lobby.LobbyId, true));
         }
     }
 }
