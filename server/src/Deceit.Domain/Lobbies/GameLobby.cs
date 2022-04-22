@@ -22,11 +22,12 @@ public class GameLobby
 
     public void ConnectPlayer(Player player)
     {
-        if (PlayerIsInLobbyAndDisconnected(player))
+        bool playerCanConnect = PlayerCanConnect(player.PlayerId);
+        if (playerCanConnect && PlayerIsInLobbyAndDisconnected(player.PlayerId))
         {
             ReconnectPlayer(player);
         }
-        else if (!GameHasStarted())
+        else if (playerCanConnect && !GameHasStarted())
         {
             AddNewPlayer(player);
         }
@@ -35,6 +36,8 @@ public class GameLobby
             throw new InvalidOperationException("Cannot add a new player to a game that is in progress");
         }
     }
+
+    public bool PlayerCanConnect(string playerId) => !GameHasStarted() || PlayerIsInLobbyAndDisconnected(playerId);
 
     private bool GameHasStarted() => DeceitContext.IsInState<PreGameState>();
 
@@ -51,9 +54,9 @@ public class GameLobby
             .IsConnected = true;
     }
 
-    private bool PlayerIsInLobbyAndDisconnected(Player player)
+    private bool PlayerIsInLobbyAndDisconnected(string playerId)
     {
-        return players.Any(p => p.PlayerId == player.PlayerId && !p.IsConnected);
+        return players.Any(p => p.PlayerId == playerId && !p.IsConnected);
     }
 
     public void DisconnectPlayer(string playerId)
