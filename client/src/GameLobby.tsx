@@ -76,7 +76,10 @@ export const GameLobby = () => {
     }, [lobbyId]);
 
     const joinLobby = () => {
-        if (connectionIsConnected()) {
+        if (!username?.trim()) {
+            alert("Please enter a username");
+        }
+        else if (connectionIsConnected()) {
             connection.invoke("ConnectPlayer", lobbyId, username);
         }
     };
