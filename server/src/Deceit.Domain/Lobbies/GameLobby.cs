@@ -20,6 +20,12 @@ public class GameLobby
         DeceitContext = new();
     }
 
+    private bool GameHasStarted() => !DeceitContext.IsInState<PreGameState>();
+
+    private bool PlayerIsInLobbyAndDisconnected(string playerId) => players.Any(p => p.PlayerId == playerId && !p.IsConnected);
+
+    public bool PlayerCanConnect(string playerId) => !GameHasStarted() || PlayerIsInLobbyAndDisconnected(playerId);
+
     public void ConnectPlayer(Player player)
     {
         bool playerCanConnect = PlayerCanConnect(player.PlayerId);
@@ -37,10 +43,6 @@ public class GameLobby
         }
     }
 
-    public bool PlayerCanConnect(string playerId) => !GameHasStarted() || PlayerIsInLobbyAndDisconnected(playerId);
-
-    private bool GameHasStarted() => !DeceitContext.IsInState<PreGameState>();
-
     private void AddNewPlayer(Player player)
     {
         players.Add(player);
@@ -52,11 +54,6 @@ public class GameLobby
         players
             .Single(p => p.PlayerId == player.PlayerId)
             .IsConnected = true;
-    }
-
-    private bool PlayerIsInLobbyAndDisconnected(string playerId)
-    {
-        return players.Any(p => p.PlayerId == playerId && !p.IsConnected);
     }
 
     public void DisconnectPlayer(string playerId)
