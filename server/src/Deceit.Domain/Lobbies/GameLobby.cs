@@ -39,7 +39,7 @@ public class GameLobby
 
     public bool PlayerCanConnect(string playerId) => !GameHasStarted() || PlayerIsInLobbyAndDisconnected(playerId);
 
-    private bool GameHasStarted() => DeceitContext.IsInState<PreGameState>();
+    private bool GameHasStarted() => !DeceitContext.IsInState<PreGameState>();
 
     private void AddNewPlayer(Player player)
     {
