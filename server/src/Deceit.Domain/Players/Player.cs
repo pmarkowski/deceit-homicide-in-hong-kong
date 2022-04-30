@@ -8,6 +8,11 @@ public class Player
 
     public Player(string playerId, string name, bool isConnected)
     {
+        if (String.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException($"{nameof(Player.Name)} cannot be empty");
+        }
+
         Name = name;
         PlayerId = playerId;
         IsConnected = isConnected;
