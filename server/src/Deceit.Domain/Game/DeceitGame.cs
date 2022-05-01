@@ -20,7 +20,7 @@ public class DeceitGame
         currentGameState = new PreGameState(this);
     }
 
-    internal void TransitionTo(State state)
+    private void TransitionTo(State state)
     {
         this.currentGameState = state;
     }
