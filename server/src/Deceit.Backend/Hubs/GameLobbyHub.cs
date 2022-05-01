@@ -18,11 +18,6 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
 
     public async Task SubmitAction(string actionType, JsonDocument action)
     {
-        // Get context for connection
-        // create Action object
-        // Dispatch action to context
-        // persist new state
-        // distribute state
         var playerId = UserIdentifier;
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         try
@@ -72,15 +67,6 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
 
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         lobby.StartGame();
-
-        // Send message telling clients to connect to Game hub instead?
-        // This is probably what makes the most sense...
-        // Not sure where making the DeceitGame makes the most sense
-        // For now, just worry about setting game state, transmitting it,
-        // and representing it. Refactor later to a separate hub.
-
-        // Each player needs to get a representation of the game that
-        // has all public information and only their private information
 
         await Task.WhenAll(lobby.Players.Select(player =>
             Clients.User(player.PlayerId)
