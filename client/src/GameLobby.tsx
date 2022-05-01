@@ -29,7 +29,22 @@ export const GameLobby = () => {
     const [username, setUsername] = useState("");
     const [lobbyState, setLobbyState] = useState<LobbyState>(LobbyState.LOADING);
     const [lobbyData, setLobbyData] = useState<any>(null);
-    const [gameData, setGameData] = useState<GameProps | null>(null);
+    const [gameData, setGameData] = useState<any>(null);
+
+    const convertGameStateToProps = (gameState: any): GameProps => ({
+        role: gameState.role,
+        forensicScientist: {
+            username: lobbyData.players.find((player: any) => player.playerId === lobbyData.deceitGameSettings?.forensicScientistId).name
+        },
+        sceneCards: [],
+        investigators: gameState.investigators.map((investigator: any) => ({
+            playerId: lobbyData.players.find((player: any) => player.playerId === investigator.playerId).name,
+            role: investigator.role,
+            hasBadge: true,
+            evidence: investigator.evidenceCards,
+            meansOfMurder: investigator.meansOfMurderCards
+        }))
+    });
 
     const cleanUpSignalRConnection = () => {
         connection.off("LobbyUpdated");
@@ -65,20 +80,7 @@ export const GameLobby = () => {
 
             connection.on("StartGame", (gameState) => {
                 console.log(gameState);
-                setGameData({
-                    role: gameState.role,
-                    forensicScientist: {
-                        username: lobbyData.players.find((player: any) => player.connectionId === lobbyData.deceitGameSettings?.forensicScientistId).name
-                    },
-                    sceneCards: [],
-                    investigators: gameState.investigators.map((investigator: any) => ({
-                        playerId: lobbyData.players.find((player: any) => player.connectionId === investigator.playerId).name,
-                        role: investigator.role,
-                        hasBadge: true,
-                        evidence: investigator.evidenceCards,
-                        meansOfMurder: investigator.meansOfMurderCards
-                    }))
-                });
+                setGameData(gameState);
             });
 
             connection.start();
@@ -151,7 +153,7 @@ export const GameLobby = () => {
 
     return <>
         {gameData ?
-            <Game {...gameData} /> :
+            <Game {...convertGameStateToProps(gameData)} /> :
             <TitleLayout>
                 {renderLobby(lobbyState)}
             </TitleLayout>}
