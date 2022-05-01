@@ -4,8 +4,8 @@ namespace Deceit.Domain.Game.States;
 
 public class CrimeState : State
 {
-    public CrimeState(DeceitGame context)
-        : base(context)
+    public CrimeState(DeceitGame game)
+        : base(game)
     {
     }
 
@@ -19,14 +19,14 @@ public class CrimeState : State
     private State HandleAction(SelectMeansOfMurderAction selectMeansOfMurderAction)
     {
         // TODO: Need to make sure that action is submitted by the Murderer at some point
-        var murderer = context.Investigators!.First(investigator => investigator.Role == Players.Roles.Murderer);
+        var murderer = game.Investigators!.First(investigator => investigator.Role == Players.Roles.Murderer);
         bool murdererHasSelectedEvidenceCard = murderer.EvidenceCards.Any(evidenceCard => evidenceCard == selectMeansOfMurderAction.Data.Evidence);
         bool murdererHasSelectedMeansOfMurderCard = murderer.MeansOfMurderCards.Any(meansOfMurderCard => meansOfMurderCard == selectMeansOfMurderAction.Data.MeansOfMurder);
         if (!murdererHasSelectedEvidenceCard || !murdererHasSelectedMeansOfMurderCard)
         {
             throw new Exception("Cannot select Key Evidence that does not belong to Murderer");
         }
-        context.KeyEvidence = selectMeansOfMurderAction.Data;
-        return new LocationOfCrimeSceneCardSelectionState(context);
+        game.KeyEvidence = selectMeansOfMurderAction.Data;
+        return new LocationOfCrimeSceneCardSelectionState(game);
     }
 }

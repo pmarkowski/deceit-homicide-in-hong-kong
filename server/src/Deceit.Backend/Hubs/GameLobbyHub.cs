@@ -30,7 +30,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         {
             var deserializedAction = ActionFactory.CreateAction(actionType, action);
 
-            lobby.DeceitGame.Handle(deserializedAction);
+            lobby.DeceitGame.HandleAction(deserializedAction);
         }
         catch (Exception ex)
         {
@@ -64,7 +64,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         var playerId = UserIdentifier;
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         // Do we still need this Hub Method? Clients can now dispatch this action directly
-        lobby.DeceitGame.Handle(new Domain.Game.States.Actions.SetForensicScientistAction(new(playerId)));
+        lobby.DeceitGame.HandleAction(new Domain.Game.States.Actions.SetForensicScientistAction(new(playerId)));
         await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby);
     }
 

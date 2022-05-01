@@ -47,7 +47,7 @@ public class GameLobby
     private void AddNewPlayer(Player player)
     {
         players.Add(player);
-        DeceitGame.Handle(new AddPlayerAction(player));
+        DeceitGame.HandleAction(new AddPlayerAction(player));
     }
 
     private void ReconnectPlayer(Player player)
@@ -73,6 +73,6 @@ public class GameLobby
     // via consumers directly passing StartGameAction to deceit context?
     public void StartGame()
     {
-        DeceitGame.Handle(new StartGameAction(new()));
+        DeceitGame.HandleAction(new StartGameAction(new()));
     }
 }

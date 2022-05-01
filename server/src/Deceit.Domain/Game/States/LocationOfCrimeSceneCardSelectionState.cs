@@ -4,8 +4,8 @@ namespace Deceit.Domain.Game.States;
 
 internal class LocationOfCrimeSceneCardSelectionState : State
 {
-    public LocationOfCrimeSceneCardSelectionState(DeceitGame context)
-        : base(context)
+    public LocationOfCrimeSceneCardSelectionState(DeceitGame game)
+        : base(game)
     {
     }
 

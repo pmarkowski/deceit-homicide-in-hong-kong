@@ -5,13 +5,13 @@ using Deceit.Domain.Players;
 
 static class StateSetups
 {
-    public static void SetupContextWithPlayers(this DeceitGame context, IEnumerable<Player> players, Player forensicScientist)
+    public static void SetupContextWithPlayers(this DeceitGame game, IEnumerable<Player> players, Player forensicScientist)
     {
         foreach (var player in players)
         {
-            context.Handle(new AddPlayerAction(player));
+            game.HandleAction(new AddPlayerAction(player));
         }
 
-        context.Handle(new SetForensicScientistAction(new(forensicScientist.PlayerId)));
+        game.HandleAction(new SetForensicScientistAction(new(forensicScientist.PlayerId)));
     }
 }

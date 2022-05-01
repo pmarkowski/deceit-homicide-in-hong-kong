@@ -25,7 +25,7 @@ public class DeceitGame
         this.currentGameState = state;
     }
 
-    public void Handle(ActionBase action)
+    public void HandleAction(ActionBase action)
     {
         State nextState = currentGameState.Handle(action);
         TransitionTo(nextState);
