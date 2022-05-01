@@ -9,7 +9,7 @@ public class PreGameState : State
     private string? forensicScientistPlayerId;
     private List<string> playerIds = new();
 
-    public PreGameState(DeceitContext context)
+    public PreGameState(DeceitGame context)
         : base(context)
     {
     }
@@ -51,8 +51,8 @@ public class PreGameState : State
 
         var roleCards = new InvestigatorRoleCardsDeck(playerIds.Count - 1);
 
-        context.Game.ForensicScientist = new ForensicScientist(forensicScientistPlayerId);
-        context.Game.Investigators = playerIds
+        context.ForensicScientist = new ForensicScientist(forensicScientistPlayerId);
+        context.Investigators = playerIds
             .Where(playerId => playerId != forensicScientistPlayerId)
             .Select(investigatorPlayerId => new Investigator(
                 investigatorPlayerId,

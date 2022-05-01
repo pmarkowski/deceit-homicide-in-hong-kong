@@ -1,11 +1,10 @@
-using Deceit.Domain.Game.Evidence;
+﻿using Deceit.Domain.Game.Evidence;
 using Deceit.Domain.Game.Players;
+using Deceit.Domain.Game.States;
+using Deceit.Domain.Game.States.Actions;
 
 namespace Deceit.Domain.Game;
 
-/// <summary>
-/// Holds all information about the game
-/// </summary>
 public class DeceitGame
 {
     internal ForensicScientist? ForensicScientist { get; set; }
@@ -37,4 +36,24 @@ public class DeceitGame
             }
         }
     }
+
+    State state;
+
+    public DeceitGame()
+    {
+        state = new PreGameState(this);
+    }
+
+    internal void TransitionTo(State state)
+    {
+        this.state = state;
+    }
+
+    public void Handle(ActionBase action)
+    {
+        State nextState = state.Handle(action);
+        TransitionTo(nextState);
+    }
+
+    public bool IsInState<T>() where T : State => state.GetType() == typeof(T);
 }

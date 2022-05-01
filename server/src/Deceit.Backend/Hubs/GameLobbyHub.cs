@@ -30,7 +30,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         {
             var deserializedAction = ActionFactory.CreateAction(actionType, action);
 
-            lobby.DeceitContext.Handle(deserializedAction);
+            lobby.DeceitGame.Handle(deserializedAction);
         }
         catch (Exception ex)
         {
@@ -40,7 +40,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         await Task.WhenAll(lobby.Players.Select(player =>
             Clients.User(player.PlayerId)
                 .GameUpdated(
-                    lobby.DeceitContext.Game.GetGameInformationForPlayer(player.PlayerId))));
+                    lobby.DeceitGame.GetGameInformationForPlayer(player.PlayerId))));
     }
 
     public async Task ConnectPlayer(string lobbyId, string name)
@@ -64,7 +64,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         var playerId = UserIdentifier;
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
         // Do we still need this Hub Method? Clients can now dispatch this action directly
-        lobby.DeceitContext.Handle(new Domain.Game.States.Actions.SetForensicScientistAction(new(playerId)));
+        lobby.DeceitGame.Handle(new Domain.Game.States.Actions.SetForensicScientistAction(new(playerId)));
         await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby);
     }
 
@@ -87,7 +87,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
         await Task.WhenAll(lobby.Players.Select(player =>
             Clients.User(player.PlayerId)
                 .StartGame(
-                    lobby.DeceitContext.Game.GetGameInformationForPlayer(player.PlayerId))));
+                    lobby.DeceitGame.GetGameInformationForPlayer(player.PlayerId))));
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)

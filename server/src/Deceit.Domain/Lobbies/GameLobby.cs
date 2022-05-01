@@ -1,3 +1,4 @@
+using Deceit.Domain.Game;
 using Deceit.Domain.Game.States;
 using Deceit.Domain.Game.States.Actions;
 using Deceit.Domain.Players;
@@ -11,16 +12,16 @@ public class GameLobby
     readonly List<Player> players;
     public IEnumerable<Player> Players => players;
 
-    public DeceitContext DeceitContext { get; }
+    public DeceitGame DeceitGame { get; }
 
     public GameLobby(string lobbyId)
     {
         LobbyId = lobbyId;
         players = new();
-        DeceitContext = new();
+        DeceitGame = new();
     }
 
-    private bool GameHasStarted() => !DeceitContext.IsInState<PreGameState>();
+    private bool GameHasStarted() => !DeceitGame.IsInState<PreGameState>();
 
     private bool PlayerIsInLobbyAndDisconnected(string playerId) => players.Any(p => p.PlayerId == playerId && !p.IsConnected);
 
@@ -46,7 +47,7 @@ public class GameLobby
     private void AddNewPlayer(Player player)
     {
         players.Add(player);
-        DeceitContext.Handle(new AddPlayerAction(player));
+        DeceitGame.Handle(new AddPlayerAction(player));
     }
 
     private void ReconnectPlayer(Player player)
@@ -58,7 +59,7 @@ public class GameLobby
 
     public void DisconnectPlayer(string playerId)
     {
-        if (DeceitContext.IsInState<PreGameState>())
+        if (DeceitGame.IsInState<PreGameState>())
         {
             players.RemoveAt(players.FindIndex(player => player.PlayerId == playerId));
         }
@@ -72,6 +73,6 @@ public class GameLobby
     // via consumers directly passing StartGameAction to deceit context?
     public void StartGame()
     {
-        DeceitContext.Handle(new StartGameAction(new()));
+        DeceitGame.Handle(new StartGameAction(new()));
     }
 }

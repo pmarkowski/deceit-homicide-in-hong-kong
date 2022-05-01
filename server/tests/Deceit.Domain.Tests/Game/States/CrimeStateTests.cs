@@ -17,7 +17,7 @@ public class CrimeStateTests
     [Fact]
     public void HandleSelectMeansOfMurderAction_OtherInvestigatorCardsSelected_ThrowsException()
     {
-        var context = new DeceitContext();
+        var context = new DeceitGame();
 
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
@@ -25,7 +25,7 @@ public class CrimeStateTests
 
         context.Handle(new StartGameAction(new()));
 
-        var nonMurderer = context.Game.Investigators!.First(investigator => investigator.Role != Roles.Murderer);
+        var nonMurderer = context.Investigators!.First(investigator => investigator.Role != Roles.Murderer);
 
         KeyEvidence selectedKeyEvidence = new(
             nonMurderer.EvidenceCards.First(),
@@ -39,14 +39,14 @@ public class CrimeStateTests
     [Fact]
     public void HandleSelectMeansOfMurderAction_MurdererCardsSelected_ForensicScientistSeesKeyEvidence()
     {
-        var context = new DeceitContext();
+        var context = new DeceitGame();
 
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
         context.SetupContextWithPlayers(players, forensicScientist);
         context.Handle(new StartGameAction(new()));
 
-        var murderer = context.Game.Investigators!.Single(investigator => investigator.Role == Roles.Murderer);
+        var murderer = context.Investigators!.Single(investigator => investigator.Role == Roles.Murderer);
 
         KeyEvidence selectedKeyEvidence = new(
             murderer.EvidenceCards.First(),
@@ -54,7 +54,7 @@ public class CrimeStateTests
         context.Handle(new SelectMeansOfMurderAction(selectedKeyEvidence));
 
         // TODO: This interface doesn't seem quite right. Pass in a Player object here instead?
-        var forensicScientistInformation = context.Game.GetGameInformationForPlayer(forensicScientist.PlayerId);
+        var forensicScientistInformation = context.GetGameInformationForPlayer(forensicScientist.PlayerId);
 
         forensicScientistInformation.Should().BeOfType<ForensicScientistGameInformation>()
             .Which.KeyEvidence.Should().NotBeNull()
@@ -64,7 +64,7 @@ public class CrimeStateTests
     [Fact]
     public void HandleSelectMeansOfMurderAction_MurdererCardsSelected_MurdererSeesKeyEvidence()
     {
-        var context = new DeceitContext();
+        var context = new DeceitGame();
 
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
@@ -74,14 +74,14 @@ public class CrimeStateTests
         // TODO: Most of the public interface obscures this information, but you can
         // still figure out the murderer from the public interface through this.
         // It's handy for this test, but will want to revisit this later.
-        var murderer = context.Game.Investigators!.Single(investigator => investigator.Role == Roles.Murderer);
+        var murderer = context.Investigators!.Single(investigator => investigator.Role == Roles.Murderer);
 
         KeyEvidence selectedKeyEvidence = new(
             murderer.EvidenceCards.First(),
             murderer.MeansOfMurderCards.First());
         context.Handle(new SelectMeansOfMurderAction(selectedKeyEvidence));
 
-        var murdererInformation = context.Game.GetGameInformationForPlayer(murderer.PlayerId);
+        var murdererInformation = context.GetGameInformationForPlayer(murderer.PlayerId);
 
         murdererInformation.Should().BeOfType<MurdererGameInformation>()
             .Which.KeyEvidence.Should().NotBeNull()

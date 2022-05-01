@@ -4,9 +4,9 @@ namespace Deceit.Domain.Game.States;
 
 public abstract class State
 {
-    protected readonly DeceitContext context;
+    protected readonly DeceitGame context;
 
-    public State(DeceitContext context)
+    public State(DeceitGame context)
     {
         this.context = context;
     }
