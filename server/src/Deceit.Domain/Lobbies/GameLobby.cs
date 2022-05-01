@@ -1,7 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
 using Deceit.Domain.Game;
-using Deceit.Domain.Game.States;
-using Deceit.Domain.Game.States.Actions;
 using Deceit.Domain.Players;
 
 namespace Deceit.Domain.Lobbies;
@@ -52,6 +49,10 @@ public class GameLobby
     private void AddNewPlayer(Player player)
     {
         players.Add(player);
+        if (players.Count == 1)
+        {
+            SetForensicScientist(player.PlayerId);
+        }
     }
 
     private void ReconnectPlayer(Player player)
