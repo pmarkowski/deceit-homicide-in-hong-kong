@@ -1,16 +1,53 @@
-using Deceit.Domain.Game.Evidence;
+﻿using Deceit.Domain.Game.Evidence;
 using Deceit.Domain.Game.Players;
+using Deceit.Domain.Game.States;
+using Deceit.Domain.Game.States.Actions;
 
 namespace Deceit.Domain.Game;
 
-/// <summary>
-/// Holds all information about the game
-/// </summary>
 public class DeceitGame
 {
-    public ForensicScientist? ForensicScientist { get; internal set; }
-    public IEnumerable<Investigator>? Investigators { get; internal set; }
+    internal ForensicScientist ForensicScientist { get; }
+
+    internal IEnumerable<Investigator> Investigators { get; }
+
     internal KeyEvidence? KeyEvidence { get; set; }
+
+    State currentGameState;
+
+    public DeceitGame(DeceitGameSettings gameSettings, IEnumerable<string> playerIds)
+    {
+        ArgumentNullException.ThrowIfNull(gameSettings.ForensicScientistId);
+
+        EvidenceCardsDeck evidenceCardsDeck = new();
+        MeansOfMurderCardsDeck meansOfMurderCardsDeck = new();
+
+        var roleCards = new InvestigatorRoleCardsDeck(playerIds.Count() - 1);
+
+        ForensicScientist = new ForensicScientist(gameSettings.ForensicScientistId);
+        Investigators = playerIds
+            .Where(playerId => playerId != gameSettings.ForensicScientistId)
+            .Select(investigatorPlayerId => new Investigator(
+                investigatorPlayerId,
+                roleCards.Draw(),
+                meansOfMurderCardsDeck.Draw(gameSettings.NumberOfEvidenceCards),
+                evidenceCardsDeck.Draw(gameSettings.NumberOfEvidenceCards)
+            ))
+            .ToList();
+
+        currentGameState = new CrimeState(this);
+    }
+
+    private void TransitionTo(State state)
+    {
+        this.currentGameState = state;
+    }
+
+    public void HandleAction(ActionBase action)
+    {
+        State nextState = currentGameState.Handle(action);
+        TransitionTo(nextState);
+    }
 
     public PlayerGameInformation GetGameInformationForPlayer(string playerId)
     {

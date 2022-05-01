@@ -6,12 +6,12 @@ namespace Deceit.Backend.Pages;
 
 public class LobbyModel : PageModel
 {
-    private readonly LobbyService lobbyService;
+    private readonly GameLobbyService lobbyService;
 
     [FromRoute]
     public string LobbyId { get; init; }
 
-    public LobbyModel(LobbyService lobbyService)
+    public LobbyModel(GameLobbyService lobbyService)
     {
         this.lobbyService = lobbyService;
         LobbyId = String.Empty;

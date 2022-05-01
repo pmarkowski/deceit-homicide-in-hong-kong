@@ -4,12 +4,12 @@ namespace Deceit.Domain.Game.States;
 
 internal class LocationOfCrimeSceneCardSelectionState : State
 {
-    public LocationOfCrimeSceneCardSelectionState(DeceitContext context)
-        : base(context)
+    public LocationOfCrimeSceneCardSelectionState(DeceitGame game)
+        : base(game)
     {
     }
 
-    public override State Handle(ActionBase action)
+    internal override State Handle(ActionBase action)
     {
         throw new NotImplementedException();
     }

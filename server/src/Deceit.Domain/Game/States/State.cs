@@ -4,14 +4,14 @@ namespace Deceit.Domain.Game.States;
 
 public abstract class State
 {
-    protected readonly DeceitContext context;
+    protected readonly DeceitGame game;
 
-    public State(DeceitContext context)
+    public State(DeceitGame game)
     {
-        this.context = context;
+        this.game = game;
     }
 
-    public abstract State Handle(ActionBase action);
+    internal abstract State Handle(ActionBase action);
 
     protected Exception UnsupportedActionException(string stateName, string actionName) =>
         new($"Received unsupported action {actionName} for state {stateName}");

@@ -1,17 +1,17 @@
 namespace Deceit.Domain.Lobbies;
 
-public class LobbyService
+public class GameLobbyService
 {
-    readonly Dictionary<string, Lobby> lobbies = new();
+    readonly Dictionary<string, GameLobby> lobbies = new();
 
-    public Lobby? FindLobby(string lobbyId)
+    public GameLobby? FindLobby(string lobbyId)
     {
         return lobbies.ContainsKey(lobbyId) ?
             lobbies[lobbyId] :
             null;
     }
 
-    public void AddLobby(Lobby lobby)
+    public void AddLobby(GameLobby lobby)
     {
         if (lobbies.ContainsKey(lobby.LobbyId))
         {
@@ -20,15 +20,15 @@ public class LobbyService
         lobbies[lobby.LobbyId] = lobby;
     }
 
-    public Lobby GetLobbyWithPlayer(string connectionId)
+    public GameLobby GetLobbyWithPlayer(string playerId)
     {
         return lobbies
             .First(keyValuePair => keyValuePair.Value.Players
-                .Any(player => player.ConnectionId == connectionId))
+                .Any(player => player.PlayerId == playerId))
             .Value;
     }
 
-    public void RemoveLobby(Lobby lobby)
+    public void RemoveLobby(GameLobby lobby)
     {
         lobbies.Remove(lobby.LobbyId);
     }
