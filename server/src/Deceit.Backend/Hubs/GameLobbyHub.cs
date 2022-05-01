@@ -62,7 +62,7 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
     {
         var playerId = UserIdentifier;
         var lobby = lobbyService.GetLobbyWithPlayer(playerId);
-        lobby.DeceitGameSettings.ForensicScientistId = playerId;
+        lobby.SetForensicScientist(playerId);
         await Clients.Group(lobby.LobbyId).LobbyUpdated(lobby);
     }
 

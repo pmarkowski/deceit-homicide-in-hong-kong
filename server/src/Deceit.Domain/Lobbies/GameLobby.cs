@@ -13,9 +13,8 @@ public class GameLobby
     readonly List<Player> players;
     public IEnumerable<Player> Players => players;
 
-    public DeceitGameSettings DeceitGameSettings { get; }
+    public DeceitGameSettings DeceitGameSettings { get; private set; }
 
-    [MemberNotNullWhen(true, nameof(GameHasStarted))]
     public DeceitGame? DeceitGame { get; private set; }
 
     public GameLobby(string lobbyId)
@@ -26,6 +25,8 @@ public class GameLobby
     }
 
     private bool GameHasStarted => DeceitGame is not null;
+
+    private bool PlayerIsInLobby(string playerId) => players.Any(player => player.PlayerId == playerId);
 
     private bool PlayerIsInLobbyAndDisconnected(string playerId) => players.Any(p => p.PlayerId == playerId && !p.IsConnected);
 
@@ -70,6 +71,24 @@ public class GameLobby
         {
             players.Single(player => player.PlayerId == playerId).IsConnected = false;
         }
+    }
+
+    public void SetForensicScientist(string playerId)
+    {
+        if (GameHasStarted)
+        {
+            throw new InvalidOperationException("Cannot set Forensic Scientist once game has started.");
+        }
+
+        if (!PlayerIsInLobby(playerId))
+        {
+            throw new InvalidOperationException("Cannot set Forensic Scientist to a player that is not in the lobby.");
+        }
+
+        DeceitGameSettings = new DeceitGameSettings()
+        {
+            ForensicScientistId = playerId
+        };
     }
 
     public void StartGame()
