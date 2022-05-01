@@ -17,13 +17,11 @@ public class CrimeStateTests
     [Fact]
     public void HandleSelectMeansOfMurderAction_OtherInvestigatorCardsSelected_ThrowsException()
     {
-        var context = new DeceitGame();
-
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
-        context.SetupContextWithPlayers(players, forensicScientist);
-
-        context.HandleAction(new StartGameAction(new()));
+        var context = new DeceitGame(
+            new DeceitGameSettings() { ForensicScientistId = forensicScientist.PlayerId },
+            players.Select(player => player.PlayerId));
 
         var nonMurderer = context.Investigators!.First(investigator => investigator.Role != Roles.Murderer);
 
@@ -39,12 +37,11 @@ public class CrimeStateTests
     [Fact]
     public void HandleSelectMeansOfMurderAction_MurdererCardsSelected_ForensicScientistSeesKeyEvidence()
     {
-        var context = new DeceitGame();
-
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
-        context.SetupContextWithPlayers(players, forensicScientist);
-        context.HandleAction(new StartGameAction(new()));
+        var context = new DeceitGame(
+            new DeceitGameSettings() { ForensicScientistId = forensicScientist.PlayerId },
+            players.Select(player => player.PlayerId));
 
         var murderer = context.Investigators!.Single(investigator => investigator.Role == Roles.Murderer);
 
@@ -64,12 +61,11 @@ public class CrimeStateTests
     [Fact]
     public void HandleSelectMeansOfMurderAction_MurdererCardsSelected_MurdererSeesKeyEvidence()
     {
-        var context = new DeceitGame();
-
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
-        context.SetupContextWithPlayers(players, forensicScientist);
-        context.HandleAction(new StartGameAction(new()));
+        var context = new DeceitGame(
+            new DeceitGameSettings() { ForensicScientistId = forensicScientist.PlayerId },
+            players.Select(player => player.PlayerId));
 
         // TODO: Most of the public interface obscures this information, but you can
         // still figure out the murderer from the public interface through this.

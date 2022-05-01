@@ -28,7 +28,7 @@ public class GameLobbyTests
     {
         var player = fixture.Create<Player>();
         lobby.ConnectPlayer(player);
-        lobby.DeceitGame.HandleAction(new SetForensicScientistAction(new(player.PlayerId)));
+        lobby.DeceitGameSettings.ForensicScientistId = player.PlayerId;
         lobby.StartGame();
 
         lobby.DisconnectPlayer(player.PlayerId);
@@ -41,7 +41,7 @@ public class GameLobbyTests
     public void ConnectPlayer_GameHasStartedWithoutPlayer_PlayerRejected()
     {
         var player = fixture.Create<Player>();
-        lobby.DeceitGame.HandleAction(new SetForensicScientistAction(new(player.PlayerId)));
+        lobby.DeceitGameSettings.ForensicScientistId = player.PlayerId;
         lobby.StartGame();
         var player2 = fixture.Create<Player>();
 
@@ -54,8 +54,8 @@ public class GameLobbyTests
     public void ConnectPlayer_GameHasStartedWithPlayerWhoDisconnected_PlayerConnects()
     {
         var player = fixture.Create<Player>();
+        lobby.DeceitGameSettings.ForensicScientistId = player.PlayerId;
         lobby.ConnectPlayer(player);
-        lobby.DeceitGame.HandleAction(new SetForensicScientistAction(new(player.PlayerId)));
         lobby.StartGame();
         lobby.DisconnectPlayer(player.PlayerId);
 

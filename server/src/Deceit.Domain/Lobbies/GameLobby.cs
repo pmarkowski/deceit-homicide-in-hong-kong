@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Deceit.Domain.Game;
 using Deceit.Domain.Game.States;
 using Deceit.Domain.Game.States.Actions;
@@ -12,20 +13,23 @@ public class GameLobby
     readonly List<Player> players;
     public IEnumerable<Player> Players => players;
 
-    public DeceitGame DeceitGame { get; }
+    public DeceitGameSettings DeceitGameSettings { get; }
+
+    [MemberNotNullWhen(true, nameof(GameHasStarted))]
+    public DeceitGame? DeceitGame { get; private set; }
 
     public GameLobby(string lobbyId)
     {
         LobbyId = lobbyId;
         players = new();
-        DeceitGame = new();
+        DeceitGameSettings = new();
     }
 
-    private bool GameHasStarted() => !DeceitGame.IsInState<PreGameState>();
+    private bool GameHasStarted => DeceitGame is not null;
 
     private bool PlayerIsInLobbyAndDisconnected(string playerId) => players.Any(p => p.PlayerId == playerId && !p.IsConnected);
 
-    public bool PlayerCanConnect(string playerId) => !GameHasStarted() || PlayerIsInLobbyAndDisconnected(playerId);
+    public bool PlayerCanConnect(string playerId) => !GameHasStarted || PlayerIsInLobbyAndDisconnected(playerId);
 
     public void ConnectPlayer(Player player)
     {
@@ -34,7 +38,7 @@ public class GameLobby
         {
             ReconnectPlayer(player);
         }
-        else if (playerCanConnect && !GameHasStarted())
+        else if (playerCanConnect && !GameHasStarted)
         {
             AddNewPlayer(player);
         }
@@ -47,7 +51,6 @@ public class GameLobby
     private void AddNewPlayer(Player player)
     {
         players.Add(player);
-        DeceitGame.HandleAction(new AddPlayerAction(player));
     }
 
     private void ReconnectPlayer(Player player)
@@ -59,7 +62,7 @@ public class GameLobby
 
     public void DisconnectPlayer(string playerId)
     {
-        if (DeceitGame.IsInState<PreGameState>())
+        if (!GameHasStarted)
         {
             players.RemoveAt(players.FindIndex(player => player.PlayerId == playerId));
         }
@@ -69,10 +72,8 @@ public class GameLobby
         }
     }
 
-    // Is this a worthwhile abstraction or should this also just be handled
-    // via consumers directly passing StartGameAction to deceit context?
     public void StartGame()
     {
-        DeceitGame.HandleAction(new StartGameAction(new()));
+        DeceitGame = new DeceitGame(DeceitGameSettings, players.Select(player => player.PlayerId));
     }
 }
