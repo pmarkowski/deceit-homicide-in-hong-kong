@@ -107,7 +107,7 @@ export const GameLobby = () => {
 
     const renderConnectedLobby = () => <>
         <div className="text-light">
-            <GameLobbyPlayerList connectedPlayers={lobbyData.players} forensicScientistId={lobbyData.forensicScientistId} />
+            <GameLobbyPlayerList connectedPlayers={lobbyData.players} forensicScientistId={lobbyData.deceitGameSettings.forensicScientistId} />
         </div>
         <button className="btn btn-blue w-full" onClick={setPlayerToForensicScientist}>I want to be the Forensic Scientist</button>
         <button className="btn btn-blue w-full" onClick={startGame}>Start Game</button>
