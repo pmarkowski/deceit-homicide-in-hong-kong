@@ -10,7 +10,7 @@ public class GameLobby
     readonly List<Player> players;
     public IEnumerable<Player> Players => players;
 
-    public DeceitGameSettings DeceitGameSettings { get; private set; }
+    public DeceitGameSettings? DeceitGameSettings { get; private set; }
 
     public DeceitGame? DeceitGame { get; private set; }
 
@@ -18,7 +18,6 @@ public class GameLobby
     {
         LobbyId = lobbyId;
         players = new();
-        DeceitGameSettings = new();
     }
 
     private bool GameHasStarted => DeceitGame is not null;
@@ -49,6 +48,7 @@ public class GameLobby
     private void AddNewPlayer(Player player)
     {
         players.Add(player);
+
         if (players.Count == 1)
         {
             SetForensicScientist(player.PlayerId);
@@ -86,14 +86,18 @@ public class GameLobby
             throw new InvalidOperationException("Cannot set Forensic Scientist to a player that is not in the lobby.");
         }
 
-        DeceitGameSettings = new DeceitGameSettings()
-        {
-            ForensicScientistId = playerId
-        };
+        DeceitGameSettings = new DeceitGameSettings(playerId);
     }
 
     public void StartGame()
     {
-        DeceitGame = new DeceitGame(DeceitGameSettings, players.Select(player => player.PlayerId));
+        if (DeceitGameSettings is null)
+        {
+            throw new InvalidOperationException("Cannot start a game in a lobby with no settings");
+        }
+
+        DeceitGame = new DeceitGame(
+            DeceitGameSettings,
+            players.Select(player => player.PlayerId));
     }
 }

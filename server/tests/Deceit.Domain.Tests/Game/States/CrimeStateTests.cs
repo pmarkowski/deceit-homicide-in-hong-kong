@@ -20,7 +20,7 @@ public class CrimeStateTests
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
         var context = new DeceitGame(
-            new DeceitGameSettings() { ForensicScientistId = forensicScientist.PlayerId },
+            new DeceitGameSettings(forensicScientist.PlayerId),
             players.Select(player => player.PlayerId));
 
         var nonMurderer = ((ForensicScientistGameInformation)context.GetGameInformationForPlayer(forensicScientist.PlayerId))
@@ -41,7 +41,7 @@ public class CrimeStateTests
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
         var context = new DeceitGame(
-            new DeceitGameSettings() { ForensicScientistId = forensicScientist.PlayerId },
+            new DeceitGameSettings(forensicScientist.PlayerId),
             players.Select(player => player.PlayerId));
 
         var murderer = ((ForensicScientistGameInformation)context.GetGameInformationForPlayer(forensicScientist.PlayerId))
@@ -52,7 +52,6 @@ public class CrimeStateTests
             murderer.MeansOfMurderCards.First());
         context.HandleAction(new SelectMeansOfMurderAction(selectedKeyEvidence));
 
-        // TODO: This interface doesn't seem quite right. Pass in a Player object here instead?
         var forensicScientistInformation = context.GetGameInformationForPlayer(forensicScientist.PlayerId);
 
         forensicScientistInformation.Should().BeOfType<ForensicScientistGameInformation>()
@@ -66,7 +65,7 @@ public class CrimeStateTests
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
         var context = new DeceitGame(
-            new DeceitGameSettings() { ForensicScientistId = forensicScientist.PlayerId },
+            new DeceitGameSettings(forensicScientist.PlayerId),
             players.Select(player => player.PlayerId));
 
         var murderer = ((ForensicScientistGameInformation)context.GetGameInformationForPlayer(forensicScientist.PlayerId))
