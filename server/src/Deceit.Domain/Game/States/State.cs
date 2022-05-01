@@ -4,11 +4,11 @@ namespace Deceit.Domain.Game.States;
 
 public abstract class State
 {
-    protected readonly DeceitContext context;
+    protected readonly DeceitGame game;
 
-    public State(DeceitContext context)
+    public State(DeceitGame game)
     {
-        this.context = context;
+        this.game = game;
     }
 
     internal abstract State Handle(ActionBase action);
