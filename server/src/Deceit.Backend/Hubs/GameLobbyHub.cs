@@ -16,7 +16,6 @@ class GameLobbyHub : Hub<IGameLobbyHubClient>
     private string UserIdentifier =>
         Context.UserIdentifier ?? throw new Exception("User with no identifier found");
 
-    // Can kind of simplify down to a really straightforward hub with nearly one method now.
     public async Task SubmitAction(string actionType, JsonDocument action)
     {
         // Get context for connection
