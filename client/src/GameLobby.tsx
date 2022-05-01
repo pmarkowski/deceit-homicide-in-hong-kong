@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { GameLobbyPlayerList } from "./GameLobbyPlayerList";
 import { TitleLayout } from "./TitleLayout";
+import { Game, GameProps } from "./Game";
 
 const playerId = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
 
@@ -26,7 +27,24 @@ export const GameLobby = () => {
     const lobbyId = params.lobbyId
 
     const [username, setUsername] = useState("");
+    const [lobbyState, setLobbyState] = useState<LobbyState>(LobbyState.LOADING);
     const [lobbyData, setLobbyData] = useState<any>(null);
+    const [gameData, setGameData] = useState<any>(null);
+
+    const convertGameStateToProps = (gameState: any): GameProps => ({
+        role: gameState.role,
+        forensicScientist: {
+            username: lobbyData.players.find((player: any) => player.playerId === lobbyData.deceitGameSettings?.forensicScientistId).name
+        },
+        sceneCards: [],
+        investigators: gameState.investigators.map((investigator: any) => ({
+            playerId: lobbyData.players.find((player: any) => player.playerId === investigator.playerId).name,
+            role: investigator.role,
+            hasBadge: true,
+            evidence: investigator.evidenceCards,
+            meansOfMurder: investigator.meansOfMurderCards
+        }))
+    });
 
     const cleanUpSignalRConnection = () => {
         connection.off("LobbyUpdated");
@@ -34,7 +52,6 @@ export const GameLobby = () => {
         connection.stop();
     }
 
-    const [lobbyState, setLobbyState] = useState<LobbyState>(LobbyState.LOADING);
     useEffect(() => {
         const getLobby = async () => {
             const getLobbyResult = await axios.get(
@@ -63,6 +80,7 @@ export const GameLobby = () => {
 
             connection.on("StartGame", (gameState) => {
                 console.log(gameState);
+                setGameData(gameState);
             });
 
             connection.start();
@@ -107,7 +125,7 @@ export const GameLobby = () => {
 
     const renderConnectedLobby = () => <>
         <div className="text-light">
-            <GameLobbyPlayerList connectedPlayers={lobbyData.players} forensicScientistId={lobbyData.deceitGameSettings.forensicScientistId} />
+            <GameLobbyPlayerList connectedPlayers={lobbyData.players} forensicScientistId={lobbyData.deceitGameSettings?.forensicScientistId} />
         </div>
         <button className="btn btn-blue w-full" onClick={setPlayerToForensicScientist}>I want to be the Forensic Scientist</button>
         <button className="btn btn-blue w-full" onClick={startGame}>Start Game</button>
@@ -133,7 +151,11 @@ export const GameLobby = () => {
         }
     }
 
-    return <TitleLayout>
-        {renderLobby(lobbyState)}
-    </TitleLayout>;
+    return <>
+        {gameData ?
+            <Game {...convertGameStateToProps(gameData)} /> :
+            <TitleLayout>
+                {renderLobby(lobbyState)}
+            </TitleLayout>}
+    </>;
 };
