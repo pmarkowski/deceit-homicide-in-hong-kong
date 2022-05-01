@@ -8,8 +8,30 @@ namespace Deceit.Domain.Game;
 public class DeceitGame
 {
     internal ForensicScientist? ForensicScientist { get; set; }
+
     public IEnumerable<Investigator>? Investigators { get; internal set; }
+
     internal KeyEvidence? KeyEvidence { get; set; }
+
+    State currentGameState;
+
+    public DeceitGame()
+    {
+        currentGameState = new PreGameState(this);
+    }
+
+    internal void TransitionTo(State state)
+    {
+        this.currentGameState = state;
+    }
+
+    public void Handle(ActionBase action)
+    {
+        State nextState = currentGameState.Handle(action);
+        TransitionTo(nextState);
+    }
+
+    public bool IsInState<T>() where T : State => currentGameState.GetType() == typeof(T);
 
     public PlayerGameInformation GetGameInformationForPlayer(string playerId)
     {
@@ -36,24 +58,4 @@ public class DeceitGame
             }
         }
     }
-
-    State state;
-
-    public DeceitGame()
-    {
-        state = new PreGameState(this);
-    }
-
-    internal void TransitionTo(State state)
-    {
-        this.state = state;
-    }
-
-    public void Handle(ActionBase action)
-    {
-        State nextState = state.Handle(action);
-        TransitionTo(nextState);
-    }
-
-    public bool IsInState<T>() where T : State => state.GetType() == typeof(T);
 }
