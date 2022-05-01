@@ -1,6 +1,4 @@
 using Deceit.Domain.Game;
-using Deceit.Domain.Game.States;
-using Deceit.Domain.Game.States.Actions;
 using Deceit.Domain.Players;
 
 namespace Deceit.Domain.Lobbies;
@@ -12,20 +10,23 @@ public class GameLobby
     readonly List<Player> players;
     public IEnumerable<Player> Players => players;
 
-    public DeceitGame DeceitGame { get; }
+    public DeceitGameSettings? DeceitGameSettings { get; private set; }
+
+    public DeceitGame? DeceitGame { get; private set; }
 
     public GameLobby(string lobbyId)
     {
         LobbyId = lobbyId;
         players = new();
-        DeceitGame = new();
     }
 
-    private bool GameHasStarted() => !DeceitGame.IsInState<PreGameState>();
+    private bool GameHasStarted => DeceitGame is not null;
+
+    private bool PlayerIsInLobby(string playerId) => players.Any(player => player.PlayerId == playerId);
 
     private bool PlayerIsInLobbyAndDisconnected(string playerId) => players.Any(p => p.PlayerId == playerId && !p.IsConnected);
 
-    public bool PlayerCanConnect(string playerId) => !GameHasStarted() || PlayerIsInLobbyAndDisconnected(playerId);
+    public bool PlayerCanConnect(string playerId) => !GameHasStarted || PlayerIsInLobbyAndDisconnected(playerId);
 
     public void ConnectPlayer(Player player)
     {
@@ -34,7 +35,7 @@ public class GameLobby
         {
             ReconnectPlayer(player);
         }
-        else if (playerCanConnect && !GameHasStarted())
+        else if (playerCanConnect && !GameHasStarted)
         {
             AddNewPlayer(player);
         }
@@ -47,7 +48,11 @@ public class GameLobby
     private void AddNewPlayer(Player player)
     {
         players.Add(player);
-        DeceitGame.HandleAction(new AddPlayerAction(player));
+
+        if (players.Count == 1)
+        {
+            SetForensicScientist(player.PlayerId);
+        }
     }
 
     private void ReconnectPlayer(Player player)
@@ -59,7 +64,7 @@ public class GameLobby
 
     public void DisconnectPlayer(string playerId)
     {
-        if (DeceitGame.IsInState<PreGameState>())
+        if (!GameHasStarted)
         {
             players.RemoveAt(players.FindIndex(player => player.PlayerId == playerId));
         }
@@ -69,10 +74,30 @@ public class GameLobby
         }
     }
 
-    // Is this a worthwhile abstraction or should this also just be handled
-    // via consumers directly passing StartGameAction to deceit context?
+    public void SetForensicScientist(string playerId)
+    {
+        if (GameHasStarted)
+        {
+            throw new InvalidOperationException("Cannot set Forensic Scientist once game has started.");
+        }
+
+        if (!PlayerIsInLobby(playerId))
+        {
+            throw new InvalidOperationException("Cannot set Forensic Scientist to a player that is not in the lobby.");
+        }
+
+        DeceitGameSettings = new DeceitGameSettings(playerId);
+    }
+
     public void StartGame()
     {
-        DeceitGame.HandleAction(new StartGameAction(new()));
+        if (DeceitGameSettings is null)
+        {
+            throw new InvalidOperationException("Cannot start a game in a lobby with no settings");
+        }
+
+        DeceitGame = new DeceitGame(
+            DeceitGameSettings,
+            players.Select(player => player.PlayerId));
     }
 }

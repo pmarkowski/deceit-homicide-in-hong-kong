@@ -7,17 +7,35 @@ namespace Deceit.Domain.Game;
 
 public class DeceitGame
 {
-    internal ForensicScientist? ForensicScientist { get; set; }
+    internal ForensicScientist ForensicScientist { get; }
 
-    public IEnumerable<Investigator>? Investigators { get; internal set; }
+    internal IEnumerable<Investigator> Investigators { get; }
 
     internal KeyEvidence? KeyEvidence { get; set; }
 
     State currentGameState;
 
-    public DeceitGame()
+    public DeceitGame(DeceitGameSettings gameSettings, IEnumerable<string> playerIds)
     {
-        currentGameState = new PreGameState(this);
+        ArgumentNullException.ThrowIfNull(gameSettings.ForensicScientistId);
+
+        EvidenceCardsDeck evidenceCardsDeck = new();
+        MeansOfMurderCardsDeck meansOfMurderCardsDeck = new();
+
+        var roleCards = new InvestigatorRoleCardsDeck(playerIds.Count() - 1);
+
+        ForensicScientist = new ForensicScientist(gameSettings.ForensicScientistId);
+        Investigators = playerIds
+            .Where(playerId => playerId != gameSettings.ForensicScientistId)
+            .Select(investigatorPlayerId => new Investigator(
+                investigatorPlayerId,
+                roleCards.Draw(),
+                meansOfMurderCardsDeck.Draw(gameSettings.NumberOfEvidenceCards),
+                evidenceCardsDeck.Draw(gameSettings.NumberOfEvidenceCards)
+            ))
+            .ToList();
+
+        currentGameState = new CrimeState(this);
     }
 
     private void TransitionTo(State state)
@@ -30,8 +48,6 @@ public class DeceitGame
         State nextState = currentGameState.Handle(action);
         TransitionTo(nextState);
     }
-
-    public bool IsInState<T>() where T : State => currentGameState.GetType() == typeof(T);
 
     public PlayerGameInformation GetGameInformationForPlayer(string playerId)
     {
