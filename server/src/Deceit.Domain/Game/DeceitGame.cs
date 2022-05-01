@@ -2,7 +2,6 @@
 using Deceit.Domain.Game.Players;
 using Deceit.Domain.Game.States;
 using Deceit.Domain.Game.States.Actions;
-using Deceit.Domain.Players;
 
 namespace Deceit.Domain.Game;
 
@@ -10,7 +9,7 @@ public class DeceitGame
 {
     internal ForensicScientist ForensicScientist { get; }
 
-    public IEnumerable<Investigator> Investigators { get; }
+    internal IEnumerable<Investigator> Investigators { get; }
 
     internal KeyEvidence? KeyEvidence { get; set; }
 

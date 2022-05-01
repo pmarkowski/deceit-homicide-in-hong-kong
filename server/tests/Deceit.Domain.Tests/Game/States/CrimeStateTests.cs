@@ -23,7 +23,8 @@ public class CrimeStateTests
             new DeceitGameSettings() { ForensicScientistId = forensicScientist.PlayerId },
             players.Select(player => player.PlayerId));
 
-        var nonMurderer = context.Investigators!.First(investigator => investigator.Role != Roles.Murderer);
+        var nonMurderer = ((ForensicScientistGameInformation)context.GetGameInformationForPlayer(forensicScientist.PlayerId))
+            .Investigators.First(investigator => investigator.Role != Roles.Murderer);
 
         KeyEvidence selectedKeyEvidence = new(
             nonMurderer.EvidenceCards.First(),
@@ -43,7 +44,8 @@ public class CrimeStateTests
             new DeceitGameSettings() { ForensicScientistId = forensicScientist.PlayerId },
             players.Select(player => player.PlayerId));
 
-        var murderer = context.Investigators!.Single(investigator => investigator.Role == Roles.Murderer);
+        var murderer = ((ForensicScientistGameInformation)context.GetGameInformationForPlayer(forensicScientist.PlayerId))
+            .Investigators.First(investigator => investigator.Role == Roles.Murderer);
 
         KeyEvidence selectedKeyEvidence = new(
             murderer.EvidenceCards.First(),
@@ -67,10 +69,8 @@ public class CrimeStateTests
             new DeceitGameSettings() { ForensicScientistId = forensicScientist.PlayerId },
             players.Select(player => player.PlayerId));
 
-        // TODO: Most of the public interface obscures this information, but you can
-        // still figure out the murderer from the public interface through this.
-        // It's handy for this test, but will want to revisit this later.
-        var murderer = context.Investigators!.Single(investigator => investigator.Role == Roles.Murderer);
+        var murderer = ((ForensicScientistGameInformation)context.GetGameInformationForPlayer(forensicScientist.PlayerId))
+            .Investigators.First(investigator => investigator.Role == Roles.Murderer);
 
         KeyEvidence selectedKeyEvidence = new(
             murderer.EvidenceCards.First(),
