@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Game, GameProps } from "./Game";
 
 const fakeGame: GameProps = {
+    playerId: "Reginald",
     role: "Forensic Scientist",
     forensicScientist: {
         username: "Reginald"
@@ -77,35 +78,35 @@ const fakeGame: GameProps = {
     ],
     investigators: [
         {
-            playerId: "Harrison",
+            playerId: "Harrison1",
             role: "Investigator",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "Harrison",
+            playerId: "Harrison2",
             role: "Investigator",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "Harrison",
+            playerId: "Harrison3",
             role: "Murderer",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "Harrison",
+            playerId: "Harrison4",
             role: "Investigator",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "Harrison",
+            playerId: "Harrison5",
             role: "Investigator",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
