@@ -39,7 +39,8 @@ export const GameLobby = () => {
         },
         sceneCards: [],
         investigators: gameState.investigators.map((investigator: any) => ({
-            playerId: lobbyData.players.find((player: any) => player.playerId === investigator.playerId).name,
+            playerId: investigator.playerId,
+            playerName: lobbyData.players.find((player: any) => player.playerId === investigator.playerId).name,
             role: investigator.role,
             hasBadge: true,
             evidence: investigator.evidenceCards,

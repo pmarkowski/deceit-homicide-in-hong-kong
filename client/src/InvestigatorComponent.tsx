@@ -2,6 +2,7 @@ import { FC } from "react";
 
 export interface Investigator {
     playerId: string,
+    playerName: string,
     role?: string,
     hasBadge: boolean,
     evidence: string[],
@@ -13,7 +14,7 @@ interface InvestigatorProps extends Investigator {
 }
 
 export const InvestigatorComponent: FC<InvestigatorProps> = (props) => <div className="bg-trueGray-800 rounded-xl p-4 inline-block m-8">
-    <p className="text-light text-xl mb-8">{`${props.hasBadge ? "🚨" : ""}${props.playerId}${props.role ? ` | ${props.role}` : ""} ${props.isCurrentPlayer ? "(You)" : ""}`}</p>
+    <p className="text-light text-xl mb-8">{`${props.hasBadge ? "🚨" : ""}${props.playerName}${props.role ? ` | ${props.role}` : ""} ${props.isCurrentPlayer ? "(You)" : ""}`}</p>
     <div className="flex justify-evenly">
         {props.evidence.map(evidence => <span key={evidence} className="btn bg-red-700 text-gray-200 mx-4 w-36">{evidence}</span>)}
     </div>

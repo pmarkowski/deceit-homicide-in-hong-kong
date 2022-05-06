@@ -78,35 +78,40 @@ const fakeGame: GameProps = {
     ],
     investigators: [
         {
-            playerId: "Harrison1",
+            playerId: "1",
+            playerName: "Harrison1",
             role: "Investigator",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "Harrison2",
+            playerId: "1",
+            playerName: "Harrison2",
             role: "Investigator",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "Harrison3",
+            playerId: "2",
+            playerName: "Harrison3",
             role: "Murderer",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "Harrison4",
+            playerId: "3",
+            playerName: "Harrison4",
             role: "Investigator",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "Harrison5",
+            playerId: "4",
+            playerName: "Harrison5",
             role: "Investigator",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
