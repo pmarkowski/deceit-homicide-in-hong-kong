@@ -86,7 +86,7 @@ const fakeGame: GameProps = {
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "1",
+            playerId: "2",
             playerName: "Harrison2",
             role: "Investigator",
             hasBadge: true,
@@ -94,7 +94,7 @@ const fakeGame: GameProps = {
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "2",
+            playerId: "3",
             playerName: "Harrison3",
             role: "Murderer",
             hasBadge: true,
@@ -102,7 +102,7 @@ const fakeGame: GameProps = {
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "3",
+            playerId: "4",
             playerName: "Harrison4",
             role: "Investigator",
             hasBadge: true,
@@ -110,7 +110,7 @@ const fakeGame: GameProps = {
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "4",
+            playerId: "5",
             playerName: "Harrison5",
             role: "Investigator",
             hasBadge: true,
