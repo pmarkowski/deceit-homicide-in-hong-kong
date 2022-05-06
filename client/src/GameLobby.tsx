@@ -32,13 +32,15 @@ export const GameLobby = () => {
     const [gameData, setGameData] = useState<any>(null);
 
     const convertGameStateToProps = (gameState: any): GameProps => ({
+        playerId: playerId,
         role: gameState.role,
         forensicScientist: {
             username: lobbyData.players.find((player: any) => player.playerId === lobbyData.deceitGameSettings?.forensicScientistId).name
         },
         sceneCards: [],
         investigators: gameState.investigators.map((investigator: any) => ({
-            playerId: lobbyData.players.find((player: any) => player.playerId === investigator.playerId).name,
+            playerId: investigator.playerId,
+            playerName: lobbyData.players.find((player: any) => player.playerId === investigator.playerId).name,
             role: investigator.role,
             hasBadge: true,
             evidence: investigator.evidenceCards,

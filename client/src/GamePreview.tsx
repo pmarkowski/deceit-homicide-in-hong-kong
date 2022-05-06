@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Game, GameProps } from "./Game";
 
 const fakeGame: GameProps = {
+    playerId: "Reginald",
     role: "Forensic Scientist",
     forensicScientist: {
         username: "Reginald"
@@ -77,35 +78,40 @@ const fakeGame: GameProps = {
     ],
     investigators: [
         {
-            playerId: "Harrison",
+            playerId: "1",
+            playerName: "Harrison1",
             role: "Investigator",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "Harrison",
+            playerId: "2",
+            playerName: "Harrison2",
             role: "Investigator",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "Harrison",
+            playerId: "3",
+            playerName: "Harrison3",
             role: "Murderer",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "Harrison",
+            playerId: "4",
+            playerName: "Harrison4",
             role: "Investigator",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
             meansOfMurder: ["Hatchet", "Strangling", "Injection", "Disease"]
         },
         {
-            playerId: "Harrison",
+            playerId: "5",
+            playerName: "Harrison5",
             role: "Investigator",
             hasBadge: true,
             evidence: ["Game Console", "Apple", "Candle", "Keyboard"],
