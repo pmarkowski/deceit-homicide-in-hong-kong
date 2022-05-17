@@ -26,17 +26,17 @@ public class CrimeStateTests
         var nonMurderer = ((ForensicScientistGameInformation)context.GetGameInformationForPlayer(forensicScientist.PlayerId))
             .Investigators.First(investigator => investigator.Role != Roles.Murderer);
 
-        KeyEvidence selectedKeyEvidence = new(
+        CrimeSolution crimeSolution = new(
             nonMurderer.EvidenceCards.First(),
             nonMurderer.MeansOfMurderCards.First());
 
-        var handleFunction = () => context.HandleAction(new SelectMeansOfMurderAction(selectedKeyEvidence));
+        var handleFunction = () => context.HandleAction(new SelectCrimeSolutionAction(crimeSolution));
 
         handleFunction.Should().Throw<Exception>();
     }
 
     [Fact]
-    public void HandleSelectMeansOfMurderAction_MurdererCardsSelected_ForensicScientistSeesKeyEvidence()
+    public void HandleSelectMeansOfMurderAction_MurdererCardsSelected_ForensicScientistSeesCrimeSolution()
     {
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
@@ -47,20 +47,20 @@ public class CrimeStateTests
         var murderer = ((ForensicScientistGameInformation)context.GetGameInformationForPlayer(forensicScientist.PlayerId))
             .Investigators.First(investigator => investigator.Role == Roles.Murderer);
 
-        KeyEvidence selectedKeyEvidence = new(
+        CrimeSolution crimeSolution = new(
             murderer.EvidenceCards.First(),
             murderer.MeansOfMurderCards.First());
-        context.HandleAction(new SelectMeansOfMurderAction(selectedKeyEvidence));
+        context.HandleAction(new SelectCrimeSolutionAction(crimeSolution));
 
         var forensicScientistInformation = context.GetGameInformationForPlayer(forensicScientist.PlayerId);
 
         forensicScientistInformation.Should().BeOfType<ForensicScientistGameInformation>()
-            .Which.KeyEvidence.Should().NotBeNull()
-            .And.Be(selectedKeyEvidence);
+            .Which.CrimeSolution.Should().NotBeNull()
+            .And.Be(crimeSolution);
     }
 
     [Fact]
-    public void HandleSelectMeansOfMurderAction_MurdererCardsSelected_MurdererSeesKeyEvidence()
+    public void HandleSelectMeansOfMurderAction_MurdererCardsSelected_MurdererSeesCrimeSolution()
     {
         var players = fixture.CreateMany<Player>(6);
         var forensicScientist = players.First();
@@ -71,15 +71,15 @@ public class CrimeStateTests
         var murderer = ((ForensicScientistGameInformation)context.GetGameInformationForPlayer(forensicScientist.PlayerId))
             .Investigators.First(investigator => investigator.Role == Roles.Murderer);
 
-        KeyEvidence selectedKeyEvidence = new(
+        CrimeSolution crimeSolution = new(
             murderer.EvidenceCards.First(),
             murderer.MeansOfMurderCards.First());
-        context.HandleAction(new SelectMeansOfMurderAction(selectedKeyEvidence));
+        context.HandleAction(new SelectCrimeSolutionAction(crimeSolution));
 
         var murdererInformation = context.GetGameInformationForPlayer(murderer.PlayerId);
 
         murdererInformation.Should().BeOfType<MurdererGameInformation>()
-            .Which.KeyEvidence.Should().NotBeNull()
-            .And.Be(selectedKeyEvidence);
+            .Which.CrimeSolution.Should().NotBeNull()
+            .And.Be(crimeSolution);
     }
 }

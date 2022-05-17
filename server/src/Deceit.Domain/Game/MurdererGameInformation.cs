@@ -5,15 +5,15 @@ namespace Deceit.Domain.Game;
 
 public class MurdererGameInformation : InvestigatorGameInformation
 {
-    public KeyEvidence? KeyEvidence { get; }
+    public CrimeSolution? CrimeSolution { get; }
 
     public MurdererGameInformation(
         string playerRole,
         IEnumerable<InvestigatorWithoutRole> investigators,
-        KeyEvidence? keyEvidence)
+        CrimeSolution? crimeSolution)
             : base(playerRole, investigators)
     {
-        KeyEvidence = keyEvidence;
+        CrimeSolution = crimeSolution;
     }
 
 }

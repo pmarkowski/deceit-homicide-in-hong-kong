@@ -6,16 +6,17 @@ using Xunit;
 
 namespace Deceit.Backend.Tests.Hubs;
 
+
 public class ActionFactoryTests
 {
     [Fact]
     public void CreateAction_ActionPassedIn_ShouldReturnDeserializedAction()
     {
-        SelectMeansOfMurderAction selectMeansOfMurderAction = new SelectMeansOfMurderAction(new("evidence", "meansOfMurder"));
+        SelectCrimeSolutionAction selectMeansOfMurderAction = new SelectCrimeSolutionAction(new("evidence", "meansOfMurder"));
         var document = JsonSerializer.SerializeToDocument(selectMeansOfMurderAction);
-        var result = ActionFactory.CreateAction("SelectMeansOfMurderAction", document);
+        var result = ActionFactory.CreateAction("SelectCrimeSolutionAction", document);
 
-        result.Should().BeAssignableTo<SelectMeansOfMurderAction>()
+        result.Should().BeAssignableTo<SelectCrimeSolutionAction>()
             .And.BeEquivalentTo(selectMeansOfMurderAction);
     }
 }
