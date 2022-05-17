@@ -12,21 +12,21 @@ public class CrimeState : State
     internal override State Handle(ActionBase action) =>
         action switch
         {
-            SelectMeansOfMurderAction meansOfMurderAction => HandleAction(meansOfMurderAction),
+            SelectCrimeSolutionAction meansOfMurderAction => HandleAction(meansOfMurderAction),
             _ => throw UnsupportedActionException(nameof(CrimeState), action.GetType().Name)
         };
 
-    private State HandleAction(SelectMeansOfMurderAction selectMeansOfMurderAction)
+    private State HandleAction(SelectCrimeSolutionAction selectMeansOfMurderAction)
     {
         // TODO: Need to make sure that action is submitted by the Murderer at some point
         var murderer = game.Investigators!.First(investigator => investigator.Role == Players.Roles.Murderer);
-        bool murdererHasSelectedEvidenceCard = murderer.EvidenceCards.Any(evidenceCard => evidenceCard == selectMeansOfMurderAction.Data.Evidence);
+        bool murdererHasSelectedEvidenceCard = murderer.EvidenceCards.Any(evidenceCard => evidenceCard == selectMeansOfMurderAction.Data.KeyEvidence);
         bool murdererHasSelectedMeansOfMurderCard = murderer.MeansOfMurderCards.Any(meansOfMurderCard => meansOfMurderCard == selectMeansOfMurderAction.Data.MeansOfMurder);
         if (!murdererHasSelectedEvidenceCard || !murdererHasSelectedMeansOfMurderCard)
         {
             throw new Exception("Cannot select Key Evidence that does not belong to Murderer");
         }
-        game.KeyEvidence = selectMeansOfMurderAction.Data;
+        game.CrimeSolution = selectMeansOfMurderAction.Data;
         return new LocationOfCrimeSceneCardSelectionState(game);
     }
 }

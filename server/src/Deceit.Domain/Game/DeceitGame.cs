@@ -11,7 +11,7 @@ public class DeceitGame
 
     internal IEnumerable<Investigator> Investigators { get; }
 
-    internal KeyEvidence? KeyEvidence { get; set; }
+    internal CrimeSolution? CrimeSolution { get; set; }
 
     State currentGameState;
 
@@ -56,7 +56,7 @@ public class DeceitGame
             return new ForensicScientistGameInformation(
                 Roles.ForensicScientist,
                 Investigators,
-                KeyEvidence
+                CrimeSolution
             );
         }
         else
@@ -64,7 +64,7 @@ public class DeceitGame
             var investigator = Investigators.Single(player => player.PlayerId == playerId);
             if (investigator.Role == Roles.Murderer)
             {
-                return new MurdererGameInformation(investigator.Role, Investigators, KeyEvidence);
+                return new MurdererGameInformation(investigator.Role, Investigators, CrimeSolution);
             }
             else
             {

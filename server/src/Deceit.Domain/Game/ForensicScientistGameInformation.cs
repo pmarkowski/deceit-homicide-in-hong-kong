@@ -11,15 +11,15 @@ namespace Deceit.Domain.Game;
 public class ForensicScientistGameInformation : PlayerGameInformation
 {
     public IEnumerable<Investigator> Investigators { get; }
-    public KeyEvidence? KeyEvidence { get; }
+    public CrimeSolution? CrimeSolution { get; }
 
     public ForensicScientistGameInformation(
         string role,
         IEnumerable<Investigator> investigators,
-        KeyEvidence? keyEvidence)
+        CrimeSolution? crimeSolution)
             : base(role)
     {
         Investigators = investigators;
-        KeyEvidence = keyEvidence;
+        CrimeSolution = crimeSolution;
     }
 }
