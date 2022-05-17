@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Deceit.Backend.Tests.Hubs;
 
-
 public class ActionFactoryTests
 {
     [Fact]
